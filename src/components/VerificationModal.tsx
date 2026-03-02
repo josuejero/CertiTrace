@@ -8,8 +8,10 @@ interface VerificationModalProps {
   disabled: boolean;
   maintenanceMessage: string;
   onClose: () => void;
-  onSubmit: (recipientName: string, recipientEmail: string) => void;
+  onSubmit: (recipientName: string, recipientEmail: string, destinationState: string) => void;
   onValidationError: (message: string) => void;
+  stateOptions: string[];
+  isSubmitting: boolean;
 }
 
 const VerificationModal: React.FC<VerificationModalProps> = ({
@@ -19,13 +21,16 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
   maintenanceMessage,
   onClose,
   onSubmit,
-  onValidationError
+  onValidationError,
+  stateOptions,
+  isSubmitting
 }) => {
   const [recipientName, setRecipientName] = useState('');
   const [recipientEmail, setRecipientEmail] = useState('');
   const [error, setError] = useState('');
   const [previewNumber, setPreviewNumber] = useState(generateFakeRequestNumber());
   const [previewTimestamp, setPreviewTimestamp] = useState(new Date().toISOString());
+  const [destinationState, setDestinationState] = useState('');
 
   useEffect(() => {
     if (open) {
@@ -34,6 +39,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
       setError('');
       setPreviewNumber(generateFakeRequestNumber());
       setPreviewTimestamp(new Date().toISOString());
+      setDestinationState('');
     }
   }, [open]);
 
@@ -63,7 +69,15 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
       return;
     }
 
-    onSubmit(trimmedName, trimmedEmail);
+    const selectedState = destinationState.trim();
+    if (!selectedState) {
+      const message = 'Select a destination state.';
+      setError(message);
+      onValidationError(message);
+      return;
+    }
+
+    onSubmit(trimmedName, trimmedEmail, selectedState);
   };
 
   return (
@@ -92,6 +106,21 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
               placeholder="qa.team@example.com"
               type="email"
             />
+          </label>
+          <label>
+            Destination state
+            <select
+              name="destinationState"
+              value={destinationState}
+              onChange={event => setDestinationState(event.target.value)}
+            >
+              <option value="">Select a destination state</option>
+              {stateOptions.map(state => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
           </label>
 
           {error && (
@@ -134,7 +163,13 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
             <button type="button" className="secondary" onClick={onClose}>
               Cancel
             </button>
-            <button type="submit" className="primary" disabled={disabled} aria-describedby={disabled ? 'maintenance-note' : undefined}>
+            <button
+              type="submit"
+              className="primary"
+              disabled={disabled || isSubmitting}
+              aria-describedby={disabled ? 'maintenance-note' : undefined}
+              aria-busy={isSubmitting ? 'true' : undefined}
+            >
               Submit request
             </button>
           </footer>

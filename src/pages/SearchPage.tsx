@@ -25,6 +25,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ records, maintenanceMode, maint
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<CredentialRecord | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmittingVerification, setIsSubmittingVerification] = useState(false);
 
   const stateOptions = useMemo(() => {
     const states = Array.from(new Set(records.map(record => record.state)));
@@ -109,18 +110,29 @@ const SearchPage: React.FC<SearchPageProps> = ({ records, maintenanceMode, maint
   const handleModalClose = () => {
     setIsModalOpen(false);
     setSelectedRecord(null);
+    setIsSubmittingVerification(false);
   };
 
-  const handleVerificationSubmit = (recipientName: string, recipientEmail: string) => {
+  const handleVerificationSubmit = (
+    recipientName: string,
+    recipientEmail: string,
+    destinationState: string
+  ) => {
     if (!selectedRecord) {
       return;
     }
+
+    if (isSubmittingVerification) {
+      return;
+    }
+
+    setIsSubmittingVerification(true);
 
     logEvent({
       action: 'verification request submitted',
       recordType: 'verification',
       recordId: selectedRecord.id,
-      details: `Letter for ${recipientName} (${recipientEmail})`
+      details: `Letter for ${recipientName} (${recipientEmail}) to ${destinationState}`
     });
     handleModalClose();
   };
@@ -236,15 +248,17 @@ const SearchPage: React.FC<SearchPageProps> = ({ records, maintenanceMode, maint
       )}
 
       {selectedRecord && (
-        <VerificationModal
-          open={isModalOpen}
-          record={selectedRecord}
-          disabled={maintenanceMode}
-          maintenanceMessage={maintenanceMessage}
-          onClose={handleModalClose}
-          onSubmit={handleVerificationSubmit}
-          onValidationError={handleValidationFailure}
-        />
+      <VerificationModal
+        open={isModalOpen}
+        record={selectedRecord}
+        disabled={maintenanceMode}
+        maintenanceMessage={maintenanceMessage}
+        stateOptions={stateOptions}
+        isSubmitting={isSubmittingVerification}
+        onClose={handleModalClose}
+        onSubmit={handleVerificationSubmit}
+        onValidationError={handleValidationFailure}
+      />
       )}
     </section>
   );

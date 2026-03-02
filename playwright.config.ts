@@ -13,7 +13,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: [['list'], ['html', { outputFolder: 'tests/html-report' }]],
+  reporter: [['list'], ['html', { outputFolder: 'playwright-report' }]],
   use: {
     baseURL: `http://127.0.0.1:${PORT}`,
     actionTimeout: 5 * 1000,

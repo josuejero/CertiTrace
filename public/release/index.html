@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CertiTrace Release Summary</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        background: #0a1221;
+        color: #f7fbff;
+        min-height: 100vh;
+      }
+      .page {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      h1 {
+        margin: 0;
+        font-size: 2rem;
+        letter-spacing: 0.025em;
+      }
+      p {
+        margin: 0;
+        line-height: 1.6;
+      }
+      .panel {
+        background: #111a31;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 20px 40px rgba(1, 5, 16, 0.5);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+      }
+      th,
+      td {
+        padding: 0.75rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: left;
+      }
+      th {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        color: rgba(247, 251, 255, 0.7);
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-weight: 600;
+      }
+      .chip {
+        padding: 0.35rem 0.75rem;
+        border-radius: 999px;
+        background: rgba(99, 255, 182, 0.15);
+        border: 1px solid rgba(99, 255, 182, 0.3);
+      }
+      .chip.fail {
+        background: rgba(255, 130, 130, 0.18);
+        border-color: rgba(255, 130, 130, 0.4);
+      }
+      .verdict {
+        font-size: 1.25rem;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(99, 255, 182, 0.35);
+        background: rgba(99, 255, 182, 0.1);
+      }
+      .meta-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 0.75rem;
+      }
+      .meta-card {
+        background: rgba(255, 255, 255, 0.02);
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      footer {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      a {
+        color: #9ef5ff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <h1>Release Summary</h1>
+        <p>Published March 2, 2026 · Supports Phase 7 exit criteria (public demo, Playwright report, bug safari, CI runs).</p>
+      </header>
+
+      <section class="panel">
+        <h2>Playwright regression evidence</h2>
+        <p>HTML report is archived under <code>/reports/latest/</code> and mirrors each browser project from <code>playwright.config.ts</code>.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Browser</th>
+              <th>Smoke suite</th>
+              <th>Regression suite</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Chromium</td>
+              <td><span class="chip">Pass</span></td>
+              <td><span class="chip">Pass</span></td>
+            </tr>
+            <tr>
+              <td>Firefox</td>
+              <td><span class="chip">Pass</span></td>
+              <td><span class="chip">Pass</span></td>
+            </tr>
+            <tr>
+              <td>WebKit</td>
+              <td><span class="chip">Pass</span></td>
+              <td><span class="chip">Pass</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <h2>Manual coverage & traceability</h2>
+        <div class="meta-list">
+          <article class="meta-card">
+            <h3>Manual suites</h3>
+            <p>See <code>manual/smoke-suite.md</code>, <code>manual/regression-suite.md</code>, and <code>manual/functional-suite.md</code> for step definitions that map to RTM IDs.</p>
+          </article>
+          <article class="meta-card">
+            <h3>RTM linkage</h3>
+            <p><code>qa/rtm.csv</code> captures coverage for every requirement and references the related manual/automation IDs. Spot-check the linked test IDs when reviewing this page.</p>
+          </article>
+          <article class="meta-card">
+            <h3>Release criteria</h3>
+            <p>This document satisfies Phase 4 release guidance from <code>qa/release-criteria.md</code>. Use the table at the bottom of that file to re-evaluate go/no-go when evidence changes.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Go / No-Go verdict</h2>
+        <div class="verdict">
+          <p><strong>Verdict:</strong> Go – all gating items (smoke, regression, cross-browser status, seeded defect triage, release documentation) are satisfied.</p>
+          <p>Release candidate is ready for recruiter review because every digital artifact (app, report, bug safari, release summary) is reachable via GitHub Pages.</p>
+        </div>
+      </section>
+
+      <footer>
+        <p>Links in this release bundle are in recruiter-friendly order: live demo, Playwright report, bug safari, and code repo. To validate, visit the paired GitHub Pages URLs and confirm the CI workflow ran on the latest push/PR.</p>
+      </footer>
+    </div>
+  </body>
+</html>

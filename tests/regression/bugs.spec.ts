@@ -21,7 +21,7 @@ test.describe('Regression guardrails', () => {
     await mayaCard.expectDisciplineBannerVisible();
   });
 
-  test('verification modal continues to validate email addresses @regression', async ({ page }) => {
+  test('verification modal validation gap closes malformed submissions @regression', async ({ page }) => {
     const searchPage = new SearchPage(page);
     await searchPage.goto();
 
@@ -29,20 +29,30 @@ test.describe('Regression guardrails', () => {
     await record.requestVerification();
 
     const verificationPage = new VerificationPage(page);
-    await verificationPage.submitForm('QA Team', 'qa-team');
+    await verificationPage.submitForm('QA Team', 'qa-team', Records.maya.state);
     await verificationPage.expectValidationError(emailErrorMessage);
+
+    await verificationPage.recipientEmailInput.fill('qa-team@example.com');
+    await verificationPage.destinationStateSelect.selectOption('');
+    await verificationPage.submitForm('QA Team', 'qa-team@example.com');
+    await verificationPage.expectValidationError('Select a destination state.');
+
+    await verificationPage.cancel();
   });
 
-  test('audit log avoids duplicate returned-record entries @regression', async ({ page }) => {
+  test('audit log avoids duplicate verification entries @regression', async ({ page }) => {
     const searchPage = new SearchPage(page);
     await searchPage.goto();
 
-    await searchPage.searchById(Records.maya.id);
+    const card = new RecordPage(page, Records.alex.id);
+    await card.requestVerification();
+
+    const verificationPage = new VerificationPage(page);
+    await verificationPage.submitForm('QA Team', 'qa-team@example.com', Records.alex.state);
 
     const auditLogPage = new AuditLogPage(page);
     await auditLogPage.goto();
 
-    await auditLogPage.expectEventCount('search submitted', Records.maya.id, 1);
-    await auditLogPage.expectEventCount('search returned record', Records.maya.id, 1);
+    await auditLogPage.expectEventCount('verification request submitted', Records.alex.id, 1);
   });
 });

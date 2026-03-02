@@ -14,6 +14,7 @@ export interface CredentialRecord {
   lastVerified: string;
   source: string;
   discipline: DisciplineInfo | null;
+  disciplinaryAction: boolean;
 }
 
 export type AuditAction =

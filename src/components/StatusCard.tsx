@@ -18,6 +18,7 @@ const statusStyles: Record<CredentialStatus, { color: string; background: string
 const StatusCard: React.FC<StatusCardProps> = ({ record, onRequestVerification, disabled, maintenanceMessage }) => {
   const status = statusStyles[record.status];
   const summaryId = `discipline-${record.id}`;
+  const shouldShowDisciplineBanner = record.disciplinaryAction && record.discipline;
 
   return (
     <article className="status-card">
@@ -41,7 +42,7 @@ const StatusCard: React.FC<StatusCardProps> = ({ record, onRequestVerification, 
         · {record.source}
       </p>
 
-      {record.discipline && (
+      {shouldShowDisciplineBanner && (
         <div className="discipline-banner" role="status" aria-live="polite" id={summaryId}>
           <p style={{ margin: '0 0 0.25rem 0', fontWeight: 600 }}>Disciplinary action</p>
           <p style={{ margin: 0 }}>{record.discipline.summary}</p>

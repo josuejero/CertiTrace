@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CertiTrace Bug Safari</title>
+    <style>
+      body {
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: #0c111c;
+        color: #f5f5fa;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      header {
+        padding: 2rem;
+        background: linear-gradient(135deg, #1f2937, #111827);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      header h1 {
+        margin: 0;
+        font-size: 2rem;
+        letter-spacing: 0.02em;
+      }
+      main {
+        flex: 1;
+        padding: 1rem 2rem 2rem;
+        display: grid;
+        gap: 1rem;
+      }
+      .bug-card {
+        background: #111827;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+      }
+      .bug-card h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1.25rem;
+      }
+      .bug-card p {
+        margin: 0.4rem 0;
+        line-height: 1.5;
+      }
+      .bug-card ul {
+        margin: 0.5rem 0 0;
+        padding-left: 1.2rem;
+      }
+      .meta {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        font-size: 0.85rem;
+      }
+      footer {
+        padding: 1rem 2rem 2rem;
+        font-size: 0.9rem;
+        background: #050810;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      a.button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        text-decoration: none;
+        color: #e0f2ff;
+        border: 1px solid rgba(224, 242, 255, 0.5);
+        padding: 0.4rem 0.85rem;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+      .triage {
+        background: #0f172a;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 1rem;
+      }
+      .triage strong {
+        color: #8bceff;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Bug Safari</h1>
+      <p>Walk through these seeded defects before running manual/automated regression suites. Each card lists the affected requirement, reproduction steps, root cause, and a placeholder PR link that illustrates how the fix would be surfaced.</p>
+    </header>
+    <main>
+      <article class="bug-card">
+        <div class="meta">
+          <span class="badge">Requirement CVT-VER-01</span>
+          <span class="badge">Severity: Major</span>
+        </div>
+        <h2>Verification modal closes before capture</h2>
+        <p>Requesting a verification letter from a record detail page sometimes dismisses the modal without logging the audit entry.</p>
+        <strong>Reproduction steps</strong>
+        <ul>
+          <li>Search for "Navarro" and open the first result.</li>
+          <li>Click "Request verification" and choose the default letter type.</li>
+          <li>Immediately fill the contact fields and submit.</li>
+          <li>Observe the modal disappear without confirmation and no audit log entry.</li>
+        </ul>
+        <p><strong>Root cause:</strong> The submit handler optionally short-circuits when maintenance-mode flags are stale, leaving the modal in a pending state.</p>
+        <p><a class="button" href="https://github.com/&lt;username&gt;/certitrace/pull/1">PR #1: Fix verification modal lifecycle</a></p>
+      </article>
+
+      <article class="bug-card">
+        <div class="meta">
+          <span class="badge">Requirement NFR-ACC-01</span>
+          <span class="badge">Severity: Minor</span>
+        </div>
+        <h2>Keyboard flow skips maintenance banner</h2>
+        <p>Tabbing through the search page ignores the maintenance banner when the config switches to maintenance mode.</p>
+        <strong>Reproduction steps</strong>
+        <ul>
+          <li>Toggle `maintenance.json` to `maintenanceMode: true` locally (or use the dev control).</li>
+          <li>Load the search page and press Tab repeatedly.</li>
+          <li>Notice the focus jumps from the header directly to the search form, skipping the banner.</li>
+        </ul>
+        <p><strong>Root cause:</strong> The banner renders outside the sequential container, so `tabindex` reorder doesn’t capture it when maintenance state flips dynamically.</p>
+        <p><a class="button" href="https://github.com/&lt;username&gt;/certitrace/pull/2">PR #2: Reset banner focus order</a></p>
+      </article>
+
+      <article class="bug-card">
+        <div class="meta">
+          <span class="badge">Requirement CVT-MNT-01</span>
+          <span class="badge">Severity: Major</span>
+        </div>
+        <h2>Maintenance banner state disconnect</h2>
+        <p>Turning maintenance on via `maintenance.json` doesn’t always disable the verification request button unless the page is refreshed.</p>
+        <strong>Reproduction steps</strong>
+        <ul>
+          <li>Start with maintenance mode off and load the app.</li>
+          <li>Open the console and toggle the config file locally (or flip the control panel).</li>
+          <li>Click “Request verification” and notice the button remains enabled despite the banner.</li>
+        </ul>
+        <p><strong>Root cause:</strong> The config is read once on startup; the button state is not data bound to the banner’s derived flag, so they drift.</p>
+        <p><a class="button" href="https://github.com/&lt;username&gt;/certitrace/pull/3">PR #3: Bind banner to request control</a></p>
+      </article>
+    </main>
+    <footer>
+      <div class="triage">
+        <strong>Defect triage notes:</strong>
+        <p>Use <code>defects/README.md</code> to file new GitHub Issues. Reference the associated requirement ID, RTM row, and attach screenshots or Playwright traces located under <code>defects/screenshots/</code>. Seeded bugs can be closed once the linked PR builds pass Playwright regression suites.</p>
+      </div>
+    </footer>
+  </body>
+</html>

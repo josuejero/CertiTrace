@@ -1,0 +1,38 @@
+[
+  {
+    "id": "CT-1001",
+    "firstName": "Alex",
+    "lastName": "Jordan",
+    "state": "CA",
+    "status": "Active",
+    "lastVerified": "2026-02-10T14:35:00Z",
+    "source": "NCCPA sync",
+    "discipline": null
+  },
+  {
+    "id": "CT-1024",
+    "firstName": "Maya",
+    "lastName": "Patel",
+    "state": "TX",
+    "status": "Expired",
+    "lastVerified": "2026-01-15T09:20:00Z",
+    "source": "Manual override",
+    "discipline": {
+      "summary": "Late CE reporting",
+      "date": "2025-12-04"
+    }
+  },
+  {
+    "id": "CT-1088",
+    "firstName": "Jordan",
+    "lastName": "Lee",
+    "state": "NY",
+    "status": "Suspended",
+    "lastVerified": "2026-01-28T12:00:00Z",
+    "source": "NCCPA sync",
+    "discipline": {
+      "summary": "Suspended for ethics review",
+      "date": "2025-10-11"
+    }
+  }
+]

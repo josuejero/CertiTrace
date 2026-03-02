@@ -1,0 +1,13 @@
+Req ID,Requirement,Risk,Manual TC IDs,Automation IDs,Defect IDs,Status
+CVT-SRCH-01,Search by first name,RISK-SEARCH-01,TBD-MAN-01,TBD-AUTO-01,-,Defined
+CVT-SRCH-02,Search by last name,RISK-SEARCH-01,TBD-MAN-02,TBD-AUTO-02,-,Defined
+CVT-SRCH-03,Search by state,RISK-SEARCH-01,TBD-MAN-03,TBD-AUTO-03,-,Defined
+CVT-SRCH-04,Search by ID,RISK-SEARCH-01,TBD-MAN-04,TBD-AUTO-04,-,Defined
+CVT-STAT-01,Status card display,RISK-STATUS-01,TBD-MAN-05,TBD-AUTO-05,-,Defined
+CVT-DISC-01,Disciplinary banner,RISK-DISC-01,TBD-MAN-06,TBD-AUTO-06,-,Defined
+CVT-VER-01,Request verification letter,RISK-VER-01,TBD-MAN-07,TBD-AUTO-07,-,Defined
+CVT-MNT-01,Maintenance banner,RISK-MNT-01,TBD-MAN-08,TBD-AUTO-08,-,Defined
+CVT-AUD-01,Audit logging,RISK-AUDIT-01,TBD-MAN-09,TBD-AUTO-09,-,Defined
+CVT-AUD-02,Audit filters,RISK-AUDIT-01,TBD-MAN-10,TBD-AUTO-10,-,Defined
+CVT-RES-01,Search summary metrics,RISK-RES-01,TBD-MAN-11,TBD-AUTO-11,-,Defined
+CVT-HIST-01,Last verified context,RISK-STATUS-01,TBD-MAN-12,TBD-AUTO-12,-,Defined

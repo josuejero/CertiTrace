@@ -31,6 +31,24 @@ This plan covers QA work required to satisfy Phase 1 scoping: requirements docum
 - Manual testers will validate keyboard navigation, semantic labels, and interpretive guidance for empty or invalid states.
 - Automation focuses on consistent result rendering (e.g., CVT-SRCH-01 through CVT-HIST-01), verifying audit logging, maintenance toggles, and verification-modal behaviors.
 - Every requirement includes placeholder IDs in the RTM for manual (`TBD-MAN-##`) and automated (`TBD-AUTO-##`) coverage.
+- Manual IDs are now defined (`MAN-SRCH-01`, `MAN-STAT-01`, etc.) and mapped directly in `qa/rtm.csv`, letting testers link covered requirements back to each manual suite entry.
+
+## Manual QA Pack (Phase 4)
+The manual suites stored under `manual/` provide the Phase 4 artifacts for smoke, functional, regression, and UAT coverage. Each suite reuses the standard table format (`ID | Title | Requirement | Suite | Preconditions | Steps | Expected Result | Notes`) so testers can quickly scan, link to requirements, and capture results.
+
+- **Smoke suite (`manual/smoke-suite.md`):** six critical sanity checks (first/last-name searches, status card styling, verification request flow, and maintenance banner presence) that must pass 100% on Chromium, Firefox, and WebKit.
+- **Functional suite (`manual/functional-suite.md`):** 20 deep-dive scenarios covering search/filter combinations, status/history validation, disciplinary banner logic, verification modal validation, maintenance persistence, audit log creation, and keyboard navigation behavior.
+- **Regression suite (`manual/regression-suite.md`):** ten regression guards with extra columns for execution status (Pass/Fail/Blocked) and defect references to capture subtle regressions in search behavior, banner accessibility, maintenance gating, audit filters, and responsive layout.
+- **UAT suite (`manual/uat-suite.md`):** four stakeholder-ready checks (disciplinary announcements, maintenance-induced disablement, modal focus order, and cross-browser smoke verification) plus a final recommendation matrix.
+
+Testers should note which `MAN-*` ID they executed, attach any evidence under `defects/screenshots/`, and file defects using `manual/defect-template.md`.
+
+### Phase 4 Release Gates
+- **Smoke suite:** 100% pass across Chromium, Firefox, and WebKit executions.
+- **Regression suite:** ≥95% pass, with failures tied to documented, triaged defects.
+- **Cross-browser smoke:** Document the smoke suite status for each browser in the UAT summary and in `qa/release-criteria.md`.
+- **Defect policy:** No open Severity 1 (Sev 1) defects; at most one open Severity 2 with a documented workaround.
+- **RTM and manual documentation:** Every `MAN-*` ID referenced in the suites is listed under the Manual TC IDs column in `qa/rtm.csv`, and the release criteria document retains the final Go/No-Go recommendation tied to these suites.
 
 ## Test Data and Environment Guidelines
 - Use synthetic records defined under `src/data/records.json` (e.g., mix of active, expired, suspended statuses and disciplinary flags).

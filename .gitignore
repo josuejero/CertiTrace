@@ -3,3 +3,5 @@ dist/
 .DS_Store
 .idea/
 npm-debug.log*
+tests/html-report/
+tests/test-results/

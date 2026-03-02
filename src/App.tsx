@@ -1,13 +1,14 @@
 import React from 'react';
 import { NavLink, Routes, Route } from 'react-router-dom';
 import recordsData from './data/records.json';
-import maintenanceConfig from './config/maintenance.json';
+import getMaintenanceConfig from './config/maintenance';
 import SearchPage from './pages/SearchPage';
 import StaffAuditPage from './pages/StaffAuditPage';
 import MaintenanceBanner from './components/MaintenanceBanner';
 import { AuditProvider } from './context/AuditContext';
 
 function App() {
+  const maintenanceConfig = getMaintenanceConfig();
   const maintenanceMode = maintenanceConfig.maintenanceMode;
 
   return (

@@ -73,7 +73,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
         <p style={{ marginTop: 0 }}>
           Letter for {record.firstName} {record.lastName} ({record.id})
         </p>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <label>
             Recipient name
             <input

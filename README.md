@@ -11,7 +11,6 @@ Synthetic healthcare certification-validation experience designed to demonstrate
 - QA documentation & manual suites
 - Defect management & packaging
 - Release, deployment, and artifacts
-- Portfolio & resume-ready proof points
 - Supporting resources
 
 ## Product story and impact
@@ -66,19 +65,6 @@ CertiTrace simulates the NCCPA-style workflow for searching practitioner records
 - **Playwright report:** The report is uploaded as a GitHub Actions artifact (name: `playwright-report`) so new evidence is always attached to the run.
 - **Local audit evidence:** Audit logs (search + verification events) persist across sessions via `localStorage`, and the staff audit page renders them in a table with filter + reset controls for verification.
 
-## Portfolio & resume-ready proof points
-- **Screenshot checklist (store files under `defects/screenshots/`):**
-  1. Search form + status card to capture CVT-SRCH/CVT-STAT behavior.
-  2. Regression failure evidence (Playwright failure or manual record).
-  3. Regression success capture (Playwright “pass” badge or hero screenshot).
-  4. Defect board or GitHub Project view with seeded bugs.
-  5. Release/go-no-go page (`site/release/index.html`).
-- **Portfolio blurb:**
-  > Designed a healthcare certification-verification QA lab with manual test planning, requirements traceability, Playwright smoke/regression automation, defect triage, and CI-published release evidence.
-- **Resume bullet:**
-  > Built CertiTrace, a healthcare certification-verification QA lab using synthetic records, manual test planning, RTM coverage, Playwright cross-browser regression automation, GitHub defect triage, and CI-published test reports.
-- **Share-time note:** Swap every `<username>` placeholder with your GitHub handle before sharing GitHub Pages URLs so the demo/report/bug-safari links resolve.
-
 ## Supporting resources
 - `src/data/records.json`: synthetic data set with Active/Expired/Suspended records plus disciplinary meta.
 - `src/config/maintenance.json`: defaults for maintenance mode + message (`lastUpdated` timestamp included for release notes).
@@ -86,9 +72,7 @@ CertiTrace simulates the NCCPA-style workflow for searching practitioner records
 - `playwright-report/`: HTML+media evidence from the last local run (refreshed in CI to `site/reports/latest/`).
 
 ## Live experience
-1. Live app: `https://<username>.github.io/certitrace/`
-2. Latest test report: `https://<username>.github.io/certitrace/reports/latest/`
-3. Bug safari: `https://<username>.github.io/certitrace/bug-safari/`
-4. Code repo: `https://github.com/<username>/certitrace`
-
-Replace `<username>` with your GitHub handle before you hand these URLs to recruiters so each link resolves properly.
+1. Live app: `https://josuejero.github.io/certitrace/`
+2. Latest test report: `https://josuejero.github.io/certitrace/reports/latest/`
+3. Bug safari: `https://josuejero.github.io/certitrace/bug-safari/`
+4. Code repo: `https://github.com/josuejero/certitrace`

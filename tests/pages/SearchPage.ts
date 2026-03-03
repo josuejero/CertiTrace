@@ -20,7 +20,8 @@ export class SearchPage {
   }
 
   async goto(path = '/') {
-    await this.page.goto(path);
+    const normalizedPath = path === '/' ? './' : path.startsWith('/') ? `.${path}` : path;
+    await this.page.goto(normalizedPath);
   }
 
   async submitSearch() {

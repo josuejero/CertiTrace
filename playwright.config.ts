@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 4173;
+const BASE_PATH = '/CertiTrace';
+const BASE_URL = `http://127.0.0.1:${PORT}${BASE_PATH}/`;
 
 export default defineConfig({
   testDir: './tests',
@@ -15,7 +17,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [['list'], ['html', { outputFolder: 'playwright-report' }]],
   use: {
-    baseURL: `http://127.0.0.1:${PORT}`,
+    baseURL: BASE_URL,
     actionTimeout: 5 * 1000,
     trace: 'on-first-retry',
     video: 'retain-on-failure',

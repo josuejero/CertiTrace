@@ -10,7 +10,7 @@ export class AuditLogPage {
   }
 
   async goto() {
-    await this.page.goto('/staff-audit');
+    await this.page.goto('./staff-audit');
     await expect(this.table).toBeVisible();
   }
 

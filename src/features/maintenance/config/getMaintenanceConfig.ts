@@ -1,4 +1,4 @@
-import baseConfig from './maintenance.json';
+import baseConfig from '../../../config/maintenance.json';
 
 declare global {
   interface Window {

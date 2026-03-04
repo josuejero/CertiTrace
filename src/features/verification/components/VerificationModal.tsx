@@ -1,17 +1,25 @@
-import React, { FormEvent, useEffect, useState } from 'react';
-import { CredentialRecord } from '../types';
-import { generateFakeRequestNumber, formatTooltipDate } from '../utils/date';
+import React, { FormEvent } from 'react';
+import { CredentialRecord } from '../../../types';
+import { formatTooltipDate } from '../../../lib/date';
 
 interface VerificationModalProps {
   open: boolean;
-  record: CredentialRecord;
+  record: CredentialRecord | null;
   disabled: boolean;
   maintenanceMessage: string;
-  onClose: () => void;
-  onSubmit: (recipientName: string, recipientEmail: string, destinationState: string) => void;
-  onValidationError: (message: string) => void;
   stateOptions: string[];
   isSubmitting: boolean;
+  recipientName: string;
+  recipientEmail: string;
+  destinationState: string;
+  error: string;
+  previewNumber: string;
+  previewTimestamp: string;
+  onRecipientNameChange: (value: string) => void;
+  onRecipientEmailChange: (value: string) => void;
+  onDestinationStateChange: (value: string) => void;
+  onClose: () => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
 const VerificationModal: React.FC<VerificationModalProps> = ({
@@ -19,66 +27,23 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
   record,
   disabled,
   maintenanceMessage,
-  onClose,
-  onSubmit,
-  onValidationError,
   stateOptions,
-  isSubmitting
+  isSubmitting,
+  recipientName,
+  recipientEmail,
+  destinationState,
+  error,
+  previewNumber,
+  previewTimestamp,
+  onRecipientNameChange,
+  onRecipientEmailChange,
+  onDestinationStateChange,
+  onClose,
+  onSubmit
 }) => {
-  const [recipientName, setRecipientName] = useState('');
-  const [recipientEmail, setRecipientEmail] = useState('');
-  const [error, setError] = useState('');
-  const [previewNumber, setPreviewNumber] = useState(generateFakeRequestNumber());
-  const [previewTimestamp, setPreviewTimestamp] = useState(new Date().toISOString());
-  const [destinationState, setDestinationState] = useState('');
-
-  useEffect(() => {
-    if (open) {
-      setRecipientName('');
-      setRecipientEmail('');
-      setError('');
-      setPreviewNumber(generateFakeRequestNumber());
-      setPreviewTimestamp(new Date().toISOString());
-      setDestinationState('');
-    }
-  }, [open]);
-
-  if (!open) {
+  if (!open || !record) {
     return null;
   }
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError('');
-
-    const trimmedName = recipientName.trim();
-    const trimmedEmail = recipientEmail.trim();
-
-    if (!trimmedName || !trimmedEmail) {
-      const message = 'Recipient name and email are required.';
-      setError(message);
-      onValidationError(message);
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(trimmedEmail)) {
-      const message = 'Enter a valid email address.';
-      setError(message);
-      onValidationError(message);
-      return;
-    }
-
-    const selectedState = destinationState.trim();
-    if (!selectedState) {
-      const message = 'Select a destination state.';
-      setError(message);
-      onValidationError(message);
-      return;
-    }
-
-    onSubmit(trimmedName, trimmedEmail, selectedState);
-  };
 
   return (
     <div className="modal-backdrop" role="presentation">
@@ -87,13 +52,13 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
         <p style={{ marginTop: 0 }}>
           Letter for {record.firstName} {record.lastName} ({record.id})
         </p>
-        <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={onSubmit} noValidate>
           <label>
             Recipient name
             <input
               name="recipientName"
               value={recipientName}
-              onChange={event => setRecipientName(event.target.value)}
+              onChange={event => onRecipientNameChange(event.target.value)}
               placeholder="Quality Assurance Office"
             />
           </label>
@@ -102,7 +67,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
             <input
               name="recipientEmail"
               value={recipientEmail}
-              onChange={event => setRecipientEmail(event.target.value)}
+              onChange={event => onRecipientEmailChange(event.target.value)}
               placeholder="qa.team@example.com"
               type="email"
             />
@@ -112,7 +77,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({
             <select
               name="destinationState"
               value={destinationState}
-              onChange={event => setDestinationState(event.target.value)}
+              onChange={event => onDestinationStateChange(event.target.value)}
             >
               <option value="">Select a destination state</option>
               {stateOptions.map(state => (

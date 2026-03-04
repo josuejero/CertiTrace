@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
-import { AuditEvent, AuditPayload } from '../types';
-import { useLocalStorageState } from '../utils/storage';
-import { generateUniqueId } from '../utils/id';
+import { AuditEvent, AuditPayload } from '../../types';
+import { useLocalStorageState } from '../../lib/storage';
+import { generateUniqueId } from '../../lib/id';
 
 const STORAGE_KEY = 'certitrace-audit-events';
 const SYNTHETIC_USER = 'CertiTrace QA Staff';

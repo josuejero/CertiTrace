@@ -17,17 +17,17 @@ Synthetic healthcare certification-validation experience designed to demonstrate
 CertiTrace simulates the NCCPA-style workflow for searching practitioner records, evaluating credential status, surfacing disciplinary history, requesting verification letters, and auditing every interaction. The goal is to give recruiters, hiring managers, or QA leads a single artifact that proves: requirements coverage was defined (`qa/requirements.md`), tests were executed (`tests/` + PlaywrightReports), defects were triaged (`defects/README.md`), and every sprint-to-release checkpoint is documented (`qa/release-criteria.md`).
 
 ## Highlights & behaviors
-- **Search-first UI:** filters for first name, last name, state, and certification ID update the status-card grid and summary chips in real time (see `src/pages/SearchPage.tsx`).
-- **Status cards:** color-coded pills/authentic icons (`StatusCard.tsx`) show Active, Expired, Suspended states; disciplinary banners only render when `disciplinaryAction` is `true` and include incident summaries.
-- **Verification workflow:** clicking `Request verification` opens a modal that validates recipient name/email, destination state, and previews a synthetic letter; submissions write to the audit log via `AuditContext` with `localStorage` persistence (`src/context/AuditContext.tsx`).
+- **Search-first UI:** filters for first name, last name, state, and certification ID update the status-card grid and summary chips in real time (see `src/features/search/SearchPage.tsx`).
+- **Status cards:** color-coded pills/authentic icons (`src/shared/components/StatusCard.tsx`) show Active, Expired, Suspended states; disciplinary banners only render when `disciplinaryAction` is `true` and include incident summaries.
+- **Verification workflow:** clicking `Request verification` opens a modal that validates recipient name/email, destination state, and previews a synthetic letter; submissions write to the audit log via `AuditContext` with `localStorage` persistence (`src/core/audit/AuditContext.tsx`).
 - **Maintenance & observability:** `src/config/maintenance.json` + overrides handle banner display, disable verification controls, and surface reasons (also controllable via `VITE_MAINTENANCE_MODE`, query params, or runtime overrides).
-- **Audit log page:** filters by action, record type, and date range while sorting events in reverse chronological order to support compliance demos (`src/pages/StaffAuditPage.tsx`).
+- **Audit log page:** filters by action, record type, and date range while sorting events in reverse chronological order to support compliance demos (`src/features/audit/StaffAuditPage.tsx`).
 
 ## Architecture & data flows
 - **Stack:** Vite + React 18 + TypeScript + React Router for SPA navigation. `main.tsx` wires `BrowserRouter`, global styles, and `App`.
 - **Data:** synthetic records live in `src/data/records.json` and include mixed statuses plus disciplinary metadata. Summary chips recompute counts from the current result set.
-- **Context:** audit events are stored in `localStorage` via `useLocalStorageState` (`src/utils/storage.ts`) and indexed with CLI-friendly IDs (`src/utils/id.ts`). The context logs actions such as `search submitted`, `search returned record`, `verification request submitted`, and `staff filter applied`.
-- **Utility functions:** `src/utils/date.ts` formats relative/verbatim timestamps and generates fake request numbers for the verification preview; this keeps the UI polished while staying deterministic for automation.
+- **Context:** audit events are stored in `localStorage` via `useLocalStorageState` (`src/lib/storage.ts`) and indexed with CLI-friendly IDs (`src/lib/id.ts`). The context logs actions such as `search submitted`, `search returned record`, `verification request submitted`, and `staff filter applied`.
+- **Utility functions:** `src/lib/date.ts` formats relative/verbatim timestamps and generates fake request numbers for the verification preview; this keeps the UI polished while staying deterministic for automation.
 
 ## Getting started
 1. **Prerequisites:** Node.js 20.x (workflow uses `actions/setup-node@v5`), npm 10+, and a browser to preview the UI.
@@ -39,7 +39,7 @@ CertiTrace simulates the NCCPA-style workflow for searching practitioner records
 ### Environment & maintenance overrides
 - Change `src/config/maintenance.json` to toggle maintenance and update the `message` shown at the top of every page.
 - Set `VITE_MAINTENANCE_MODE=true` or append `?maintenance=true&maintenanceMessage=Your+Message` to the URL to supply ad-hoc overrides during demos.
-- Global overrides can also be injected at runtime via `window.__CERTITRACE_MAINTENANCE_MODE` and `window.__CERTITRACE_MAINTENANCE_MESSAGE` (see `src/config/maintenance.ts`).
+- Global overrides can also be injected at runtime via `window.__CERTITRACE_MAINTENANCE_MODE` and `window.__CERTITRACE_MAINTENANCE_MESSAGE` (see `src/features/maintenance/config/getMaintenanceConfig.ts`).
 
 ## Automated testing
 - **Playwright suites:** smoke (`tests/smoke`), regression (`tests/regression/bugs.spec.ts`), and supporting page objects under `tests/pages/` keep automation maintainable.

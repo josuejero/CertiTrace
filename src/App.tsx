@@ -1,15 +1,13 @@
 import React from 'react';
 import { NavLink, Routes, Route } from 'react-router-dom';
 import recordsData from './data/records.json';
-import getMaintenanceConfig from './config/maintenance';
-import SearchPage from './pages/SearchPage';
-import StaffAuditPage from './pages/StaffAuditPage';
-import MaintenanceBanner from './components/MaintenanceBanner';
-import { AuditProvider } from './context/AuditContext';
+import { AuditProvider } from './core/audit';
+import { MaintenanceBanner, useMaintenanceConfig } from './features/maintenance';
+import SearchFeature from './features/search';
+import StaffAuditFeature from './features/audit';
 
 function App() {
-  const maintenanceConfig = getMaintenanceConfig();
-  const maintenanceMode = maintenanceConfig.maintenanceMode;
+  const { maintenanceMode, message: maintenanceMessage } = useMaintenanceConfig();
 
   return (
     <div className="app-shell">
@@ -24,22 +22,16 @@ function App() {
         </nav>
       </header>
 
-      {maintenanceMode && <MaintenanceBanner message={maintenanceConfig.message} />}
+      {maintenanceMode && <MaintenanceBanner message={maintenanceMessage} />}
 
       <main>
         <AuditProvider>
           <Routes>
             <Route
               path="/"
-              element={
-                <SearchPage
-                  records={recordsData}
-                  maintenanceMode={maintenanceMode}
-                  maintenanceMessage={maintenanceConfig.message}
-                />
-              }
+              element={<SearchFeature records={recordsData} maintenanceMode={maintenanceMode} maintenanceMessage={maintenanceMessage} />}
             />
-            <Route path="/staff-audit" element={<StaffAuditPage />} />
+            <Route path="/staff-audit" element={<StaffAuditFeature />} />
           </Routes>
         </AuditProvider>
       </main>

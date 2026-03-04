@@ -1,6 +1,6 @@
 import React from 'react';
-import { CredentialRecord, CredentialStatus } from '../types';
-import { formatRelativeDate, formatTooltipDate } from '../utils/date';
+import { CredentialRecord, CredentialStatus } from '../../types';
+import { formatRelativeDate, formatTooltipDate } from '../../lib/date';
 
 interface StatusCardProps {
   record: CredentialRecord;

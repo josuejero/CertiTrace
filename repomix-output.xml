@@ -1,0 +1,2992 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.github/
+  workflows/
+    deploy-pages.yml
+defects/
+  README.md
+manual/
+  defect-template.md
+  functional-suite.md
+  regression-suite.md
+  smoke-suite.md
+  uat-suite.md
+public/
+  bug-safari/
+    index.html
+  release/
+    index.html
+qa/
+  final-test-summary.md
+  phase-6-story.md
+  phase-7-8-packaging.md
+  release-criteria.md
+  requirements.md
+  risk-register.md
+  rtm.csv
+  test-plan.md
+src/
+  components/
+    MaintenanceBanner.tsx
+    StatusCard.tsx
+    VerificationModal.tsx
+  config/
+    maintenance.json
+    maintenance.ts
+  context/
+    AuditContext.tsx
+  data/
+    records.json
+  pages/
+    SearchPage.tsx
+    StaffAuditPage.tsx
+  utils/
+    date.ts
+    id.ts
+    storage.ts
+  App.tsx
+  env.d.ts
+  main.tsx
+  styles.css
+  types.ts
+tests/
+  fixtures/
+    records.ts
+  pages/
+    AuditLogPage.ts
+    RecordPage.ts
+    SearchPage.ts
+    VerificationPage.ts
+  regression/
+    bugs.spec.ts
+  smoke/
+    search.spec.ts
+.gitignore
+.repomixignore
+index.html
+package.json
+playwright.config.ts
+README.md
+tsconfig.json
+vite.config.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".repomixignore">
+playwright-report/index.html
+</file>
+
+<file path="defects/README.md">
+# Defect Management Guide
+
+CertiTrace uses GitHub Issues for defect tracking and Projects for triage, following the QA artifact guidance from Phase 1.
+
+## Filing a Defect
+1. Create a new GitHub Issue titled `[Defect] <requirement ID> - short summary` (e.g., `[Defect] CVT-STAT-01 - status card stale`).
+2. Tag it with the relevant label(s) (e.g., `bug`, `regression`, `accessibility`).
+3. Reference the requirement ID from `qa/requirements.md` and include the RTM row number for traceability.
+4. Attach reproducer steps, expected vs. actual behavior, environment, and, if available, a Playwright test or manual checklist entry.
+5. If a screenshot helps, place it under `defects/screenshots/` and link the file path in the issue (e.g., `defects/screenshots/cvt-stat-issue-01.png`).
+
+## Triage Process
+- Use GitHub Projects to review active defects weekly. Track severity, status, assigned owner, and linked automation from the RTM. Generate a board view that groups defects by requirement ID or test phase (smoke/functional/regression).
+- Prioritize high-impact defects tied to active release criteria (especially CVT-VER-01, CVT-MNT-01, and CVT-AUD-01).
+- For regression defects, update the RTM row’s Defect IDs column with the issue number (e.g., `GH-123`).
+
+## Severity & Status Conventions
+- **Severity levels:** `Critical` (blocks verification or compliance), `Major` (interferes with core flows), `Minor` (ui polish or messaging). Document severity in the issue body.
+- **Status:** Use GitHub issue states (`Open`, `In Progress`, `Blocked`, `Closed`). Use `Draft` or `Triaged` labels for early findings.
+
+## Release Criteria Linkage
+Defects tied to release criteria (RTM coverage, automation readiness, release document sign-offs) must cite the release criteria document and include any blocking evidence, such as failed Playwright suites or missing audit logs.
+
+## Maintenance & Evidence
+- After fixing a defect, update the RTM row to include the defect ID and automation plan (if relevant).
+- Store reproduction artifacts (screenshots, logs) under `defects/screenshots/`. Label files clearly (e.g., `CVT-VER-01-modal-error.png`).
+</file>
+
+<file path="manual/defect-template.md">
+# Manual Defect Template
+Use this template consistently when filing issues uncovered during manual execution. Place any supporting screenshots or GIFs under `defects/screenshots/` and link the relative path.
+
+| Field | Description |
+| --- | --- |
+| **Defect ID** | Assign a unique identifier (e.g., `MAN-DEF-001`). Match the naming scheme in the RTM if applicable. |
+| **Title** | `[Defect] <requirement ID> - short summary` (per `defects/README.md`). |
+| **Environment** | Browser, viewport, OS, app build (`npm run dev` or built artifact), and whether maintenance mode was toggled. |
+| **Steps to reproduce** | Step-by-step actions taken in the manual suite; include data values and focus order when relevant. |
+| **Expected result** | What should happen according to the requirement, manual test step, or accessibility standard. |
+| **Actual result** | What was observed instead; capture timing, error text, disabled controls, etc. |
+| **Severity** | `Critical`, `Major`, or `Minor`. No open `Critical`/`Sev 1` by policy. |
+| **Priority** | How soon the issue should be addressed (e.g., `High`, `Medium`, `Low`). |
+| **Requirement ID** | Reference from `qa/requirements.md` (e.g., `CVT-DISC-01`). |
+| **Screenshot/GIF** | Provide a relative path under `defects/screenshots/` (e.g., `defects/screenshots/man-disc-01.png`). |
+| **Fix PR** | Link to the pull request that resolves the defect once available. |
+| **Retest status** | `Not run`, `Pass`, `Fail`, or `Blocked` (update after verification). |
+| **Release criteria** | Cite the relevant exit condition (e.g., "Phase 4 release criteria: smoke 100% pass"). |
+
+> Keep this template near the front of your defect description so reviewers and stakeholders see the coverage and gating context immediately.
+</file>
+
+<file path="manual/functional-suite.md">
+# Functional Suite
+
+## Overview
+Functional tests cover the bulk of the behavioral requirements—search/filter combinations, status cards, disciplinary cues, verification modal validation, maintenance persistence, audit logging, and keyboard accessibility. Each row below references a requirement ID so traceability is maintained.
+
+## Preconditions & Tools
+- Use the same synthetic fixtures (`src/data/records.json`) and the audit log context (`AuditProvider`).
+- Toggle maintenance via `src/config/maintenance.json` only when a test explicitly states it.
+- Capture screenshots or short videos when anomalies appear and store them under `defects/screenshots/` for ease of linking.
+
+## Standard Table Format (applies to every suite)
+| ID | Title | Requirement | Suite | Preconditions | Steps | Expected Result | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MAN-SRCH-04 | State filter narrows list | CVT-SRCH-03; CVT-RES-01 | Functional | App running, filters empty | Select `TX` from State dropdown, submit | Only Maya Patel (TX) shows; expired chip increments | Validates state-specific filtering |
+| MAN-SRCH-05 | Combined filters intersection | CVT-SRCH-02; CVT-SRCH-03 | Functional | At least one `NY` record | Select State `NY`, enter Last name `Lee`, submit | Only `CT-1088` appears | Checks multi-filter precision |
+| MAN-SRCH-06 | ID search exact match | CVT-SRCH-04 | Functional | Search pane open | Enter `CT-1024`, submit | Maya Patel card appears; summary text says 1 record | Confirms ID lookups yield single result |
+| MAN-SRCH-07 | No result messaging | CVT-SRCH-04; CVT-AUD-01 | Functional | Filters reset | Enter `CT-9999`, submit | Empty-state message appears; audit records `no-result search` | Ensures zero-hit behavior |
+| MAN-SRCH-08 | Reset/blank search | CVT-RES-01 | Functional | After a filtered search | Clear all inputs, submit | All records shown; summary text reverts to "Showing all records" | Verifies default state restoration |
+| MAN-SRCH-09 | First-name chips update | CVT-RES-01 | Functional | Filters empty | Enter `Alex`, submit | Only Alex card visible; chips reflect active count 1 | Connects chips with results |
+| MAN-STAT-02 | Expired styling check | CVT-STAT-01 | Functional | `Maya Patel` visible | Observe status pill | Amber background, ⚠️ icon, text `Expired` | Keeps visual cue consistent |
+| MAN-STAT-03 | Suspended styling check | CVT-STAT-01 | Functional | `Jordan Lee` visible | Observe card | Red pill, ⛔ icon, label `Suspended` | Displays penalty state clearly |
+| MAN-STAT-04 | Last-verified tooltip | CVT-HIST-01 | Functional | Card list present | Hover over timestamp | Tooltip shows raw ISO date, inline text shows relative age | Stabilizes history context |
+| MAN-STAT-05 | Source attribution | CVT-HIST-01 | Functional | Cards visible | Inspect source text next to timestamp | Each card lists `source` (e.g., "NCCPA sync") | Communicates provenance |
+| MAN-DISC-01 | Banner appears when flagged | CVT-DISC-01 | Functional | Maya Patel has discipline | Expand Maya card | Banner text includes "Disciplinary action", summary, date, link | Ensures incident visibility |
+| MAN-DISC-02 | Banner hidden when clear | CVT-DISC-01 | Functional | Alex Jordan card present | Check for banner | No disciplinary banner rendered | Avoids false positives |
+| MAN-VER-02 | Required fields enforced | CVT-VER-01 | Functional | Modal open, fields empty | Submit without input | Error "Recipient name and email are required." shown | Protects data entry integrity |
+| MAN-VER-03 | Email format validation | CVT-VER-01 | Functional | Modal open | Enter `qa-team` email, submit | Error "Enter a valid email address." and validation event logged | Guards email format |
+| MAN-VER-04 | Preview info accuracy | CVT-VER-01 | Functional | Modal open | Observe preview before submit | Preview shows request number, timestamp, record name/ID/status | Keeps QA context complete |
+| MAN-VER-06 | Cancel flow | CVT-VER-01 | Functional | Modal open after previous test | Click `Cancel`, reopen modal | Modal closes without new audit entry; reopened modal is fresh | Avoids stale states |
+| MAN-MNT-02 | Maintenance banner persistence | CVT-MNT-01 | Functional | Set `maintenanceMode` true | Navigate between Search and Audit | Banner stays and message reiterates verification disablement | Confirms global state |
+| MAN-AUD-01 | Search audit entries | CVT-AUD-01 | Functional | Perform search, then visit audit page | Open audit log | Entries for `search submitted` and `search returned record` exist with filter details | Validates logging pipeline |
+| MAN-AUD-02 | Verification audit entry | CVT-AUD-01 | Functional | Non-maintenance submission done | Visit audit log | `verification request submitted` row shows the record ID | Shows verification traceability |
+| MAN-ACC-01 | Keyboard tab order | NFR-ACC-01 | Functional | App loaded | Use Tab and Enter through search, cards, modal controls | Focus order is logical; Enter triggers Search/Submit | Ensures keyboard reliability |
+</file>
+
+<file path="manual/regression-suite.md">
+# Regression Suite
+
+## Overview
+These regression guards protect the behaviors already exercised by the smoke and functional suites. Each test below reuses the standard columns, with extra fields for tracking execution status and any linked defects so regressions are traceable.
+
+## Execution Notes
+- Schedule regression runs after any feature or platform updates that touch search, banners, or auditing.
+- Capture any deviations in the `Defect (if any)` column; reference `manual/defect-template.md` when filing issues.
+
+## Standard Table Format (applies to every suite)
+| ID | Title | Requirement | Suite | Preconditions | Steps | Expected Result | Notes | Execution Status (Pass/Fail/Blocked) | Defect (if any) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| MAN-SRCH-10 | Enter key triggers search | CVT-SRCH-01; NFR-ACC-01 | Regression | First-name field focused | Type `Al`, press Enter | Search executes identically to clicking the button | Tests keyboard parity | |
+| MAN-SRCH-11 | Partial last-name matches | CVT-SRCH-02 | Regression | Last-name field clear | Enter `Jor`, submit | Cards for `Jordan Lee` + `Alex Jordan` display | Validates partial filtering | |
+| MAN-SRCH-12 | Initial state messaging | CVT-RES-01 | Regression | App freshly loaded | Click Search w/ blanks or rely on default | Summary says "Showing all records" with counts 3 | Confirms default messaging | |
+| MAN-STAT-06 | Status card accessibility | CVT-STAT-01 | Regression | Status grid visible | Inspect DOM for `role`, `aria-live`, `id` references | Screen reader text would announce status w/ record ID | Keeps accessible semantics | |
+| MAN-DISC-03 | Discipline metadata narration | CVT-DISC-01; NFR-ACC-02 | Regression | Maya Patel card active | Inspect banner | Date listed, `role="status"`, `aria-live="polite"` exist | Ensures assistive cues | |
+| MAN-DISC-04 | Incident link focus | CVT-DISC-01 | Regression | Banner in focus order | Tab to "View incident details" and activate | Focus remains contained; link reachable even though `href="#"` | Verifies keyboard interactability | |
+| MAN-MNT-03 | Maintenance disables controls | CVT-MNT-01 | Regression | `maintenanceMode` on | Open Search and modal | Buttons/submit disabled with tooltip describing message | Prevents false submissions | |
+| MAN-AUD-03 | Audit filters respect inputs | CVT-AUD-02 | Regression | Audit log populated | Apply Action: "search returned record", Type: "search", date range that includes today | Table only shows matching rows; `staff filter applied` event logged | Ensures filters work | |
+| MAN-AUD-04 | Audit reset flow | CVT-AUD-02 | Regression | Filters applied | Click `Reset` | Filters clear and entire audit log returns | Guarantees filter reset | |
+| MAN-ACC-02 | Responsive layout check | NFR-ACC-02; NFR-REL-01 | Regression | Browser width set to mobile | Shrink viewport (e.g., 375px) | Search form stacks, cards reflow, banner text wraps without overflow | Prevents layout breakage | |
+
+## Regression Log Template
+| Date | Tester | Scope | Status | Notes |
+| ---- | ------ | ----- | ------ | ----- |
+| | | | | |
+
+> Populate the log each regression run; the summary should feed into the Phase 4 release recommendation.
+</file>
+
+<file path="manual/smoke-suite.md">
+# Smoke Suite
+
+## Overview
+The smoke suite confirms that the high-level experiences—search, status cards, verification requests, and maintenance warnings—are instantly usable in every browser before deeper work begins. These tests must pass at 100% for Chromium, Firefox, and WebKit releases marked as a Go.
+
+## Environment & Data
+- **App build:** current dev server (e.g., `npm run dev`).
+- **Data fixture:** `src/data/records.json` (Alex Jordan, Maya Patel, Jordan Lee).
+- **Maintenance toggle:** `src/config/maintenance.json` (flip `maintenanceMode` to `true` for maintenance checks).
+- **Browsers:** run in Chromium, Firefox, WebKit projects.
+
+## Standard Table Format (applies to every suite)
+| ID | Title | Requirement | Suite | Preconditions | Steps | Expected Result | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MAN-SRCH-01 | Two-letter first-name search | CVT-SRCH-01 | Smoke | App loaded with fixtures | Type `Ma` into First name and submit | Only `Maya Patel` and any other matches appear; summary chips update | Confirms case-insensitive partial first-name filtering |
+| MAN-SRCH-02 | Minimal first-name validation | CVT-SRCH-01 | Smoke | Same as above | Enter whitespace or single character in First name, submit | Validation message "First name requires at least 2 characters." appears | Ensures guard rails for narrow queries |
+| MAN-SRCH-03 | Case-insensitive last-name search | CVT-SRCH-02 | Smoke | Same state | Type `jordan` in Last name, submit | Both `Alex Jordan` and `Jordan Lee` display; summary text says 2 records | Verifies last-name matching tolerates casing |
+| MAN-STAT-01 | Active status pill checks | CVT-STAT-01 | Smoke | At least one Active record visible | Inspect Alex Jordan card (Active) | Pill shows green styling, ✅ icon, text "Active" | Confirms visual semantics |
+| MAN-VER-01 | Happy-path verification request | CVT-VER-01; CVT-AUD-01 | Smoke | Search result present, maintenance off | Open modal for Active record, fill valid name/email, submit | Modal closes, audit table records `verification request submitted` | Makes sure request flow works |
+| MAN-MNT-01 | Maintenance banner presence | CVT-MNT-01 | Smoke | Set `maintenanceMode` to true | Reload app and visit Search + Audit navigation | Banner appears with maintenance message and disables request buttons | Verifies banner global visibility |
+
+## Execution Log Template
+| Date | Browser | Tester | Pass/Fail | Notes |
+| ---- | ------- | ------ | --------- | ----- |
+| | | | | |
+
+> Record the results for each browser iteration to satisfy the cross-browser smoke requirement.
+</file>
+
+<file path="manual/uat-suite.md">
+# UAT Suite
+
+## Overview
+User acceptance testing focuses on stakeholder-ready narratives: disciplinary announcements, maintenance-induced gating, keyboard reliability, and the cross-browser smoke validation that decides Go vs No-Go. Each test below also indicates who to inform when the behavior is accepted.
+
+## Execution Notes
+- UAT runs should include a short debrief that feeds into `qa/release-criteria.md`’s final recommendation matrix.
+- Record the actual browser statuses for Chromium, Firefox, and WebKit during the cross-browser smoke run.
+
+## Standard Table Format (applies to every suite)
+| ID | Title | Requirement | Suite | Preconditions | Steps | Expected Result | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MAN-DISC-05 | Disciplinary banner announcement | CVT-DISC-01 | UAT | Maya Patel card visible | Trigger disciplinary banner | Banner text references statement of reason, `aria-live` announces it | Suitable for stakeholder story |
+| MAN-VER-05 | Maintenance disables requests | CVT-MNT-01; CVT-VER-01 | UAT | `maintenanceMode` enabled | Open modal for Active record | Submit button disabled, maintenance message shown | Communicates fail-safe to stakeholders |
+| MAN-VER-07 | Modal focus discipline | NFR-ACC-01 | UAT | Modal open | Tab and Shift+Tab through recipient fields and buttons, then press Enter on Submit | Focus order logical, Enter triggers validation or success, logarithms recorded | Demonstrates refined keyboard UX |
+| MAN-ACC-03 | Cross-browser smoke verification | NFR-REL-01 | UAT | Smoke suite steps defined | Run canonical smoke cases in Chromium, Firefox, WebKit | Document pass/fail for each browser and link to their logs | Signals readiness for multi-browser Go/No-Go |
+
+## Final Recommendation Summary
+| Item | Details |
+| --- | --- |
+| Run date | |
+| Chromium smoke status | |
+| Firefox smoke status | |
+| WebKit smoke status | |
+| Open defects (Sev 2 or higher) | |
+| Final recommendation | Go if all Phase 4 exit criteria (smoke 100%, regression ≥95%, cross-browser smoke, no open Sev 1, ≤1 Sev 2 with workaround) are satisfied; otherwise mark No-Go. |
+| Reviewer | |
+| Notes | |
+
+> Include this summary in the final release criteria document so the Go/No-Go decision is traceable.
+</file>
+
+<file path="public/bug-safari/index.html">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CertiTrace Bug Safari</title>
+    <style>
+      body {
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: #0c111c;
+        color: #f5f5fa;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      header {
+        padding: 2rem;
+        background: linear-gradient(135deg, #1f2937, #111827);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      header h1 {
+        margin: 0;
+        font-size: 2rem;
+        letter-spacing: 0.02em;
+      }
+      main {
+        flex: 1;
+        padding: 1rem 2rem 2rem;
+        display: grid;
+        gap: 1rem;
+      }
+      .bug-card {
+        background: #111827;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+      }
+      .bug-card h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1.25rem;
+      }
+      .bug-card p {
+        margin: 0.4rem 0;
+        line-height: 1.5;
+      }
+      .bug-card ul {
+        margin: 0.5rem 0 0;
+        padding-left: 1.2rem;
+      }
+      .meta {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        font-size: 0.85rem;
+      }
+      footer {
+        padding: 1rem 2rem 2rem;
+        font-size: 0.9rem;
+        background: #050810;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      a.button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        text-decoration: none;
+        color: #e0f2ff;
+        border: 1px solid rgba(224, 242, 255, 0.5);
+        padding: 0.4rem 0.85rem;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+      .triage {
+        background: #0f172a;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 1rem;
+      }
+      .triage strong {
+        color: #8bceff;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Bug Safari</h1>
+      <p>Walk through these seeded defects before running manual/automated regression suites. Each card lists the affected requirement, reproduction steps, root cause, and a placeholder PR link that illustrates how the fix would be surfaced.</p>
+    </header>
+    <main>
+      <article class="bug-card">
+        <div class="meta">
+          <span class="badge">Requirement CVT-VER-01</span>
+          <span class="badge">Severity: Major</span>
+        </div>
+        <h2>Verification modal closes before capture</h2>
+        <p>Requesting a verification letter from a record detail page sometimes dismisses the modal without logging the audit entry.</p>
+        <strong>Reproduction steps</strong>
+        <ul>
+          <li>Search for "Navarro" and open the first result.</li>
+          <li>Click "Request verification" and choose the default letter type.</li>
+          <li>Immediately fill the contact fields and submit.</li>
+          <li>Observe the modal disappear without confirmation and no audit log entry.</li>
+        </ul>
+        <p><strong>Root cause:</strong> The submit handler optionally short-circuits when maintenance-mode flags are stale, leaving the modal in a pending state.</p>
+        <p><a class="button" href="https://github.com/&lt;username&gt;/certitrace/pull/1">PR #1: Fix verification modal lifecycle</a></p>
+      </article>
+
+      <article class="bug-card">
+        <div class="meta">
+          <span class="badge">Requirement NFR-ACC-01</span>
+          <span class="badge">Severity: Minor</span>
+        </div>
+        <h2>Keyboard flow skips maintenance banner</h2>
+        <p>Tabbing through the search page ignores the maintenance banner when the config switches to maintenance mode.</p>
+        <strong>Reproduction steps</strong>
+        <ul>
+          <li>Toggle `maintenance.json` to `maintenanceMode: true` locally (or use the dev control).</li>
+          <li>Load the search page and press Tab repeatedly.</li>
+          <li>Notice the focus jumps from the header directly to the search form, skipping the banner.</li>
+        </ul>
+        <p><strong>Root cause:</strong> The banner renders outside the sequential container, so `tabindex` reorder doesn’t capture it when maintenance state flips dynamically.</p>
+        <p><a class="button" href="https://github.com/&lt;username&gt;/certitrace/pull/2">PR #2: Reset banner focus order</a></p>
+      </article>
+
+      <article class="bug-card">
+        <div class="meta">
+          <span class="badge">Requirement CVT-MNT-01</span>
+          <span class="badge">Severity: Major</span>
+        </div>
+        <h2>Maintenance banner state disconnect</h2>
+        <p>Turning maintenance on via `maintenance.json` doesn’t always disable the verification request button unless the page is refreshed.</p>
+        <strong>Reproduction steps</strong>
+        <ul>
+          <li>Start with maintenance mode off and load the app.</li>
+          <li>Open the console and toggle the config file locally (or flip the control panel).</li>
+          <li>Click “Request verification” and notice the button remains enabled despite the banner.</li>
+        </ul>
+        <p><strong>Root cause:</strong> The config is read once on startup; the button state is not data bound to the banner’s derived flag, so they drift.</p>
+        <p><a class="button" href="https://github.com/&lt;username&gt;/certitrace/pull/3">PR #3: Bind banner to request control</a></p>
+      </article>
+    </main>
+    <footer>
+      <div class="triage">
+        <strong>Defect triage notes:</strong>
+        <p>Use <code>defects/README.md</code> to file new GitHub Issues. Reference the associated requirement ID, RTM row, and attach screenshots or Playwright traces located under <code>defects/screenshots/</code>. Seeded bugs can be closed once the linked PR builds pass Playwright regression suites.</p>
+      </div>
+    </footer>
+  </body>
+</html>
+</file>
+
+<file path="public/release/index.html">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CertiTrace Release Summary</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        background: #0a1221;
+        color: #f7fbff;
+        min-height: 100vh;
+      }
+      .page {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      h1 {
+        margin: 0;
+        font-size: 2rem;
+        letter-spacing: 0.025em;
+      }
+      p {
+        margin: 0;
+        line-height: 1.6;
+      }
+      .panel {
+        background: #111a31;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 20px 40px rgba(1, 5, 16, 0.5);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+      }
+      th,
+      td {
+        padding: 0.75rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: left;
+      }
+      th {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        color: rgba(247, 251, 255, 0.7);
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-weight: 600;
+      }
+      .chip {
+        padding: 0.35rem 0.75rem;
+        border-radius: 999px;
+        background: rgba(99, 255, 182, 0.15);
+        border: 1px solid rgba(99, 255, 182, 0.3);
+      }
+      .chip.fail {
+        background: rgba(255, 130, 130, 0.18);
+        border-color: rgba(255, 130, 130, 0.4);
+      }
+      .verdict {
+        font-size: 1.25rem;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(99, 255, 182, 0.35);
+        background: rgba(99, 255, 182, 0.1);
+      }
+      .meta-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 0.75rem;
+      }
+      .meta-card {
+        background: rgba(255, 255, 255, 0.02);
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      footer {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      a {
+        color: #9ef5ff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <h1>Release Summary</h1>
+        <p>Published March 2, 2026 · Supports Phase 7 exit criteria (public demo, Playwright report, bug safari, CI runs).</p>
+      </header>
+
+      <section class="panel">
+        <h2>Playwright regression evidence</h2>
+        <p>HTML report is archived under <code>/reports/latest/</code> and mirrors each browser project from <code>playwright.config.ts</code>.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Browser</th>
+              <th>Smoke suite</th>
+              <th>Regression suite</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Chromium</td>
+              <td><span class="chip">Pass</span></td>
+              <td><span class="chip">Pass</span></td>
+            </tr>
+            <tr>
+              <td>Firefox</td>
+              <td><span class="chip">Pass</span></td>
+              <td><span class="chip">Pass</span></td>
+            </tr>
+            <tr>
+              <td>WebKit</td>
+              <td><span class="chip">Pass</span></td>
+              <td><span class="chip">Pass</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <h2>Manual coverage & traceability</h2>
+        <div class="meta-list">
+          <article class="meta-card">
+            <h3>Manual suites</h3>
+            <p>See <code>manual/smoke-suite.md</code>, <code>manual/regression-suite.md</code>, and <code>manual/functional-suite.md</code> for step definitions that map to RTM IDs.</p>
+          </article>
+          <article class="meta-card">
+            <h3>RTM linkage</h3>
+            <p><code>qa/rtm.csv</code> captures coverage for every requirement and references the related manual/automation IDs. Spot-check the linked test IDs when reviewing this page.</p>
+          </article>
+          <article class="meta-card">
+            <h3>Release criteria</h3>
+            <p>This document satisfies Phase 4 release guidance from <code>qa/release-criteria.md</code>. Use the table at the bottom of that file to re-evaluate go/no-go when evidence changes.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Go / No-Go verdict</h2>
+        <div class="verdict">
+          <p><strong>Verdict:</strong> Go – all gating items (smoke, regression, cross-browser status, seeded defect triage, release documentation) are satisfied.</p>
+          <p>Release candidate is ready for recruiter review because every digital artifact (app, report, bug safari, release summary) is reachable via GitHub Pages.</p>
+        </div>
+      </section>
+
+      <footer>
+        <p>Links in this release bundle are in recruiter-friendly order: live demo, Playwright report, bug safari, and code repo. To validate, visit the paired GitHub Pages URLs and confirm the CI workflow ran on the latest push/PR.</p>
+      </footer>
+    </div>
+  </body>
+</html>
+</file>
+
+<file path="qa/final-test-summary.md">
+# Final Test Summary (placeholder)
+
+This document will capture the final test results for Phase 1 artifacts once manual and automated suites run. It will reference requirement IDs from `qa/requirements.md`, RTM entries from `qa/rtm.csv`, and relevant GitHub Issues.
+
+- **Status:** Planned (no executions yet)
+- **Next steps:** Populate with Playwright report summary and manual checklist sign-offs once testing begins.
+</file>
+
+<file path="qa/phase-6-story.md">
+# Phase 6 story: seeded bugs & flaky test stabilization
+
+This narrative captures Phase 6’s guardrails: deliberately seed three defects, triage them through GitHub Issues and Projects, confirm fixes with regression automation, and document an intentionally flaky maintenance banner test before and after stabilization.
+
+## Exit criteria (met)
+- **3 defects filed:** Issues `GH-210`, `GH-211`, `GH-212` track the seeded bugs, each linked to the `CertiTrace Phase 6 QA` Project with Severity, Priority, Status, Component, and Fix Version fields populated per the GitHub Docs guidance.
+- **3 fixes merged:** Status card gating, verification modal validation, and audit logging guards were merged together with this change set.
+- **3 regression tests added:** Automation IDs `REG-DISC-01`, `REG-VER-01`, and `REG-AUD-01` now guard the seeded scenarios.
+- **Flaky test story documented:** The maintenance banner story below highlights the before/after stability work and the Playwright retry guidance.
+
+## Seeded defects (tracked in GH)
+| Title | Issue | Severity | Priority | Status | Component | Fix version | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Disciplinary banner false positive (banner shown when `disciplinaryAction` is `false`) | GH-210 | Major | Medium | Closed | Status cards | v0.1.1 | Added an explicit `disciplinaryAction` flag and only render the banner when it is `true`, aligning with the field that records the actual action state. |
+| Verification form validation gap (malformed email or missing destination state) | GH-211 | Major | High | Closed | Verification modal | v0.1.1 | Introduced the `Destination state` dropdown, tightened validation, surfaced the errors via `role="alert"`, and guarded against double submissions. |
+| Audit log duplication (submit handler firing twice) | GH-212 | Major | Medium | Closed | Audit logging | v0.1.1 | Added a submission guard to the verification flow, ensuring the `verification request submitted` entry is logged exactly once per request. |
+
+Each issue was added to the `CertiTrace Phase 6 QA` GitHub Project board with the prescribed custom fields (Severity, Priority, Status, Component, Fix Version) so stakeholders can review triage history and verify deployment readiness.
+
+## Regression coverage (automation)
+- `REG-DISC-01` (`tests/regression/bugs.spec.ts`): Confirms the disciplinary banner only appears when `disciplinaryAction` is `true`, protecting against the false-positive scenario seeded for Alex Jordan even though the legacy summary string remains present.
+- `REG-VER-01` (`tests/regression/bugs.spec.ts`): Exercises the verification modal’s validation logic, first asserting malformed email rejection with a valid state and then verifying the `Select a destination state.` error when the dropdown is left empty.
+- `REG-AUD-01` (`tests/regression/bugs.spec.ts`): Submits a verification request and then validates the audit log contains exactly one `verification request submitted` entry for the targeted record, preventing duplicate audit rows.
+
+Each automation ID now appears in `qa/rtm.csv`, linking the regression guardrails back to `CVT-DISC-01`, `CVT-VER-01`, and `CVT-AUD-01`.
+
+## Flaky maintenance banner story
+
+### Before (flaky tracer)
+The maintenance banner load was simulated by an async config fetch that resolved after a randomized delay. The original test (the “flaky version”) yawed open Playwright’s `page.waitForTimeout(300)` before checking for the banner. Because the delay could exceed 300 ms, the assertion occasionally ran before the banner rendered, producing intermittent failures. These flakes were hard to reproduce, and retries masked the root cause rather than fixing it.
+
+### After (stabilized guardrail)
+We stabilized the story by mocking the maintenance configuration (via the query string override) and by letting Playwright’s `expect(locator).toBeVisible()` auto-retry until the DOM actually reflects the warning. The simplification matches Playwright’s recommended pattern for async pages (see `expect(...).toBeVisible()` auto-retries in the Playwright docs) and eliminates brittle `waitForTimeout` sleeps. The smoke test now asserts the banner and the disabled request buttons deterministically.
+
+## Takeaways
+- The seeded bugs exercise the QA team’s ability to triage (issue + project), confirm (regression tests), and prevent regressions (automation + doc) while still telling the debugging story.
+- The maintenance banner note captures how flaky behavior can be tamed by explicit waits, deterministic mocks, and Playwright’s built-in retries, which is a micro-case study for future async UI tests.
+</file>
+
+<file path="qa/phase-7-8-packaging.md">
+# Phase 7 & 8 Packaging
+
+## Phase 7 deliverables
+1. **Automated pipeline** – `deploy-pages.yml` runs on every push/PR to `main`, installs dependencies, builds the Vite app, runs `npm run test:e2e`, uploads `playwright-report/` as an artifact, and assembles a `site/` payload containing the built app plus the latest HTML report.
+2. **Site artifact layout** – Each workflow output contains these directories that get published to GitHub Pages:
+   - `site/index.html` (live CertiTrace web app)
+   - `site/reports/latest/` (Playwright-generated HTML report with screenshots/traces)
+   - `site/bug-safari/index.html` (seeded defect story + reproduction guidance)
+   - `site/release/index.html` (release summary + go/no-go verdict) 
+3. **Pages flow** – The deploy job downloads the `site` artifact, configures Pages, uploads the artifact via `actions/upload-pages-artifact`, and calls `actions/deploy-pages` with `wait-for-deployment: true` so reviewers always land on the freshest bundle.
+
+## Phase 8 portfolio guidance
+- **Screenshot checklist (store files under `defects/screenshots/` for traceability)**
+  1. Search experience showing the search form beside a status card (captures CVT-SRCH-01/02/03 behavior).
+  2. Failing regression capture (Playwright failure or manual evidence with reason).
+  3. Passing regression capture (success screen or Playwright “pass” badge in the report).
+  4. Defect board or GitHub Project view with seeded bugs/screen.
+  5. Release summary / go/no-go page (the HTML under `/release/index.html`).
+- **Portfolio card description**
+  > Designed a healthcare certification-verification QA lab with manual test planning, requirements traceability, Playwright smoke/regression automation, defect triage, and CI-published release evidence.
+- **Resume bullet**
+  > Built CertiTrace, a healthcare certification-verification QA lab using synthetic records, manual test planning, RTM coverage, Playwright cross-browser regression automation, GitHub defect triage, and CI-published test reports.
+- **Artifact hygiene** – Pair each screenshot with the corresponding RTM ID in `qa/rtm.csv` and add defect links from `defects/README.md` when reference is required.
+
+## Link ordering directive
+Recruiters should click links in the following order so the experience builds quickly:
+1. Live demo (`site/index.html`)
+2. Latest test report (`/reports/latest/index.html`)
+3. Bug safari (`/bug-safari/index.html`)
+4. Code repository (this repo)
+
+## Notes
+- Replace `<username>` with your GitHub handle when sharing the Pages URLs.
+- When new deploys happen, refresh the `reports/latest/` path before capturing screenshots so the portfolio evidence always links to the latest artifact.
+</file>
+
+<file path="qa/requirements.md">
+# CertiTrace QA Requirements
+
+## Project Context
+CertiTrace is a synthetic QA lab inspired by the NCCPA certification portal. The experience mimics a board-certification verification workflow, allowing staff to search synthetic practitioner data, observe current certification status, respond to disciplinary conditions, request verification letters, and verify that audit and maintenance controls trigger at the right times. All data displayed is fabricated; the goal is to rehearse a realistic QA cycle without ever touching sensitive records.
+
+## Functional Requirements
+Each functional requirement maps directly to a behavior the product must deliver before automation or staff testing begins.
+
+| ID | Title | Description | Success Criteria | Notes |
+| --- | --- | --- | --- | --- |
+| CVT-SRCH-01 | Search by first name | Search form accepts a first name and filters credential records. | Results list shows matches when the first name has at least 2 characters; errors when only whitespace entered. | Synthetic fixture set contains duplicate first names to exercise specificity. |
+| CVT-SRCH-02 | Search by last name | Search form accepts a last name filter. | Results filtered to records whose last name matches the input string; handles case-insensitive input. | Adds confidence for surname-based lookups. |
+| CVT-SRCH-03 | Search by state | Search form includes a state dropdown that filters results by license state. | Selecting a state updates the result set immediately when search executed. | Dropdown is populated from `src/data/records.json`. |
+| CVT-SRCH-04 | Search by ID | Search form allows exact certification ID entry. | ID search returns a single precise match when ID exists, or a helpful zero-result state when not. | Supports certificate lookup workflows. |
+| CVT-STAT-01 | Status card display | Each matched record surfaces a status card showing Active / Expired / Suspended. | Status card changes color and icon based on status; includes last verified timestamp. | Cards are accessible (text + icon). |
+| CVT-DISC-01 | Disciplinary banner | If a record has reportable discipline, a banner appears near the status card describing the action. | Banner only renders when discipline flag true, and links to incident details. | Banner includes reference to statement of reason. |
+| CVT-VER-01 | Request verification letter | Staff can request a verification letter from a record detail view. | Clicking "Request verification" opens a modal summarizing document type and recipient; submission saves to audit log. | Modal enforces required contact fields. |
+| CVT-MNT-01 | Maintenance banner | When maintenance mode is configured via `src/config/maintenance.json`, a persistent banner warns users and disables new verification requests. | Banner appears on all pages during maintenance; request controls become disabled with explanatory tooltip. | Maintenance status toggles automatically from config file. |
+| CVT-AUD-01 | Audit logging | Search and verification actions emit audit entries that capture user, action, timestamp, and record ID. | Logs persist in local store and are visible on the staff audit page within seconds. | Logging includes synthetic staff identifier. |
+| CVT-AUD-02 | Staff audit filters | Audit page filters logs by action (search, request), date range, and record type (search vs. verification). | Applying filters narrows visible entries; a "reset" control clears filters. | Filter controls have accessible labels. |
+| CVT-RES-01 | Search summary metrics | Search results header summarizes counts by status (Active / Expired / Suspended) for the current query. | Summary updates with each query and handles empty result sets gracefully. | Helps staff evaluate certification mix. |
+| CVT-HIST-01 | Last verified context | Each result includes a last verified timestamp and source (e.g., "NCCPA sync" or "Manual override"). | Timestamp shows relative time (e.g., "Verified 3 days ago") with tooltip for exact datetime. | Source dropdown is limited to pre-approved values. |
+
+## Non-Functional Requirements
+These requirements shape quality expectations beyond behavior.
+
+| ID | Title | Description | Validation Metric |
+| --- | --- | --- | --- |
+| NFR-ACC-01 | Keyboard accessible form | Search form supports full keyboard navigation (tab order, Enter to submit, Escape to clear). | Manual accessibility check / Playwright test uses `press('Tab')` and `press('Enter')`. |
+| NFR-ACC-02 | Semantic labels & roles | Inputs, buttons, and banners include descriptive ARIA labels or semantic tags. | Static audit (axe?/DevTools) + query selectors use `getByRole` in Playwright. |
+| NFR-REL-01 | Clear empty/invalid states | Empty result displays and invalid input errors include helpful guidance. | Visual verification + Playwright assertions for `getByText`. |
+| NFR-REL-02 | CI automation on every push | Playwright suites execute on GitHub Actions for every push/PR. | GH Actions workflow run status and Playwright report artifact. |
+| NFR-TRC-01 | Traceability coverage | Every requirement links to manual and/or automated coverage and tracked defects. | RTM columns filled, spot-check of references. |
+| NFR-MNT-01 | Observability for maintenance mode | Maintenance banner/config anomalies fire logging events and surface in CI checks. | Playwright smoke checks confirm banner, plus CI log entries when maintenance config toggles. |
+
+All requirements (functional and non-functional) are referenced by ID in subsequent QA artifacts so Phase 1 exit criteria are satisfied.
+</file>
+
+<file path="qa/risk-register.md">
+# CertiTrace Risk Register (Phase 1)
+
+Risks focus on information accuracy, compliance, and observability tied to the functional requirements documented in `qa/requirements.md`. Ownership rests with the QA lead or product owner until engineering delivers stable behavior.
+
+| Risk ID | Summary | Likelihood | Impact | Mitigation | Owner | Linked Requirements |
+| --- | --- | --- | --- | --- | --- | --- |
+| RISK-SEARCH-01 | Search filters return incorrect or partial results, reducing trust. | Medium | High | Lock down synthetic data fixture coverage, cover combos in Playwright, document expected behavior in manual suites. | QA Lead | CVT-SRCH-01, CVT-SRCH-02, CVT-SRCH-03, CVT-SRCH-04, CVT-RES-01 |
+| RISK-STATUS-01 | Status card or last-verified labels show stale state or missing data. | Medium | Medium | Implement mock refresh hooks, assert last-updated fields, and review changelog for any status mapping. | Product Owner | CVT-STAT-01, CVT-HIST-01 |
+| RISK-DISC-01 | Disciplinary banner appears when it shouldn't or hides needed warnings. | Low | Medium | Guard banners with explicit flag checks, review fixture data, and assert banner text in Playwright. | QA Lead | CVT-DISC-01 |
+| RISK-VER-01 | Verification letter workflow cannot be submitted or audited. | Medium | High | Validate modal controls, require mandatory fields, and ensure audit log entries capture the request. | Release Manager | CVT-VER-01 |
+| RISK-MNT-01 | Maintenance banner misconfigures, leaving requests enabled or banner hidden. | Medium | High | Drive banner from `src/config/maintenance.json`, include observability logging, and smoke-test toggle on CI. | Ops Lead | CVT-MNT-01, NFR-MNT-01 |
+| RISK-AUDIT-01 | Audit logs drop entries or filter controls misbehave, injuring compliance. | Low | High | Exercise logging on every search/verification action and script filter permutations. | QA Lead | CVT-AUD-01, CVT-AUD-02 |
+| RISK-RES-01 | Summary metrics diverge from actual results, confusing staff decisions. | Low | Medium | Surface explicit counts for each status and reconcile against result set size during automation. | QA Lead | CVT-RES-01 |
+
+Each risk is tracked in the RTM column to keep manual/automated scope aligned with mitigation status.
+</file>
+
+<file path="src/components/MaintenanceBanner.tsx">
+import React from 'react';
+
+interface MaintenanceBannerProps {
+  message: string;
+}
+
+const MaintenanceBanner: React.FC<MaintenanceBannerProps> = ({ message }) => (
+  <div className="maintenance-banner" role="status" aria-live="polite">
+    <strong>Maintenance mode</strong>
+    <span>{message}</span>
+  </div>
+);
+
+export default MaintenanceBanner;
+</file>
+
+<file path="src/config/maintenance.json">
+{
+  "maintenanceMode": false,
+  "message": "CertiTrace is under scheduled maintenance. Verification letters cannot be requested at this time.",
+  "lastUpdated": "2026-02-20T08:00:00Z"
+}
+</file>
+
+<file path="src/config/maintenance.ts">
+import baseConfig from './maintenance.json';
+
+declare global {
+  interface Window {
+    __CERTITRACE_MAINTENANCE_MODE?: boolean;
+    __CERTITRACE_MAINTENANCE_MESSAGE?: string;
+  }
+}
+
+interface MaintenanceConfig {
+  maintenanceMode: boolean;
+  message: string;
+  lastUpdated: string;
+}
+
+const getWindowOverrides = () => (typeof window !== 'undefined' ? window : undefined);
+const getQueryParams = () => (typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams());
+
+export default function getMaintenanceConfig(): MaintenanceConfig {
+  const windowOverrides = getWindowOverrides();
+  const envMaintenanceMode = import.meta.env.VITE_MAINTENANCE_MODE;
+  const envMessage = import.meta.env.VITE_MAINTENANCE_MESSAGE;
+  const queryParams = getQueryParams();
+  const queryMaintenanceMode = queryParams.get('maintenance') === 'true';
+  const queryMessage = queryParams.get('maintenanceMessage');
+
+  const maintenanceMode =
+    windowOverrides?.__CERTITRACE_MAINTENANCE_MODE ??
+    queryMaintenanceMode ??
+    (envMaintenanceMode === 'true' ? true : baseConfig.maintenanceMode);
+
+  const message =
+    windowOverrides?.__CERTITRACE_MAINTENANCE_MESSAGE ||
+    queryMessage ||
+    envMessage ||
+    baseConfig.message;
+
+  return {
+    ...baseConfig,
+    maintenanceMode,
+    message
+  };
+}
+</file>
+
+<file path="src/context/AuditContext.tsx">
+import React, { createContext, useContext } from 'react';
+import { AuditEvent, AuditPayload } from '../types';
+import { useLocalStorageState } from '../utils/storage';
+import { generateUniqueId } from '../utils/id';
+
+const STORAGE_KEY = 'certitrace-audit-events';
+const SYNTHETIC_USER = 'CertiTrace QA Staff';
+
+interface AuditContextValue {
+  events: AuditEvent[];
+  logEvent: (payload: AuditPayload) => void;
+}
+
+const AuditContext = createContext<AuditContextValue | null>(null);
+
+export const AuditProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [events, setEvents] = useLocalStorageState<AuditEvent[]>(STORAGE_KEY, []);
+
+  const logEvent = (payload: AuditPayload) => {
+    const timestamp = new Date().toISOString();
+    const newEvent: AuditEvent = {
+      ...payload,
+      id: generateUniqueId(),
+      timestamp,
+      user: SYNTHETIC_USER
+    };
+
+    setEvents(prev => [newEvent, ...prev]);
+  };
+
+  return <AuditContext.Provider value={{ events, logEvent }}>{children}</AuditContext.Provider>;
+};
+
+export function useAuditEvents(): AuditContextValue {
+  const context = useContext(AuditContext);
+  if (!context) {
+    throw new Error('useAuditEvents must be used within an AuditProvider');
+  }
+  return context;
+}
+</file>
+
+<file path="src/pages/StaffAuditPage.tsx">
+import React, { useMemo, useState } from 'react';
+import { AuditAction, AuditRecordType } from '../types';
+import { useAuditEvents } from '../context/AuditContext';
+
+const availableActions: AuditAction[] = [
+  'search submitted',
+  'search returned record',
+  'no-result search',
+  'verification request submitted',
+  'verification request validation failure',
+  'staff filter applied'
+];
+
+const recordTypeOptions: AuditRecordType[] = ['search', 'verification', 'system'];
+
+interface FilterState {
+  action: AuditAction | '';
+  recordType: AuditRecordType | '';
+  startDate: string;
+  endDate: string;
+}
+
+const defaultFilters: FilterState = {
+  action: '',
+  recordType: '',
+  startDate: '',
+  endDate: ''
+};
+
+const StaffAuditPage: React.FC = () => {
+  const { events, logEvent } = useAuditEvents();
+  const [filters, setFilters] = useState(defaultFilters);
+  const [appliedFilters, setAppliedFilters] = useState(defaultFilters);
+
+  const filteredEvents = useMemo(() => {
+    return events.filter(event => {
+      if (appliedFilters.action && event.action !== appliedFilters.action) {
+        return false;
+      }
+      if (appliedFilters.recordType && event.recordType !== appliedFilters.recordType) {
+        return false;
+      }
+      if (appliedFilters.startDate && new Date(event.timestamp) < new Date(appliedFilters.startDate)) {
+        return false;
+      }
+      if (appliedFilters.endDate && new Date(event.timestamp) > new Date(`${appliedFilters.endDate}T23:59:59`)) {
+        return false;
+      }
+      return true;
+    });
+  }, [events, appliedFilters]);
+
+  const handleApplyFilters = () => {
+    setAppliedFilters(filters);
+    logEvent({
+      action: 'staff filter applied',
+      recordType: 'system',
+      recordId: 'filter',
+      details: `Filters => action:${filters.action || 'any'} recordType:${filters.recordType || 'any'} start:${
+        filters.startDate || 'any'
+      } end:${filters.endDate || 'any'}`
+    });
+  };
+
+  const handleResetFilters = () => {
+    setFilters(defaultFilters);
+    setAppliedFilters(defaultFilters);
+  };
+
+  const sortedEvents = useMemo(
+    () => [...filteredEvents].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()),
+    [filteredEvents]
+  );
+
+  return (
+    <section aria-label="Staff audit log">
+      <div className="audit-controls">
+        <label>
+          Action
+          <select value={filters.action} onChange={event => setFilters(prev => ({ ...prev, action: event.target.value as AuditAction | '' }))}>
+            <option value="">All actions</option>
+            {availableActions.map(action => (
+              <option key={action} value={action}>
+                {action}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Record type
+          <select value={filters.recordType} onChange={event => setFilters(prev => ({ ...prev, recordType: event.target.value as AuditRecordType | '' }))}>
+            <option value="">All types</option>
+            {recordTypeOptions.map(type => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Start date
+          <input
+            type="date"
+            value={filters.startDate}
+            onChange={event => setFilters(prev => ({ ...prev, startDate: event.target.value }))}
+          />
+        </label>
+        <label>
+          End date
+          <input type="date" value={filters.endDate} onChange={event => setFilters(prev => ({ ...prev, endDate: event.target.value }))} />
+        </label>
+        <div className="actions">
+          <button type="button" className="apply" onClick={handleApplyFilters}>
+            Apply filters
+          </button>
+          <button type="button" className="reset" onClick={handleResetFilters}>
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <p aria-live="polite" style={{ marginBottom: '0.75rem' }}>
+        Showing {sortedEvents.length} audit event{sortedEvents.length === 1 ? '' : 's'}.
+      </p>
+
+      {sortedEvents.length === 0 ? (
+        <div className="empty-state" role="status">
+          No audit events match the selected criteria yet. Generate activity via the search or verification workflows.
+        </div>
+      ) : (
+        <table className="audit-table">
+          <thead>
+            <tr>
+              <th scope="col">Timestamp</th>
+              <th scope="col">Action</th>
+              <th scope="col">Record</th>
+              <th scope="col">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedEvents.map(event => (
+              <tr key={event.id}>
+                <td>{new Date(event.timestamp).toLocaleString()}</td>
+                <td>{event.action}</td>
+                <td>{event.recordId}</td>
+                <td>{event.details}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </section>
+  );
+};
+
+export default StaffAuditPage;
+</file>
+
+<file path="src/utils/date.ts">
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+export function formatRelativeDate(timestamp: string): string {
+  const then = new Date(timestamp).getTime();
+  const now = Date.now();
+  const diff = now - then;
+  if (diff < 0) {
+    return 'Verified recently';
+  }
+  const days = Math.floor(diff / MS_PER_DAY);
+  if (days === 0) {
+    return 'Verified today';
+  }
+  if (days === 1) {
+    return 'Verified yesterday';
+  }
+  return `Verified ${days} days ago`;
+}
+
+export function formatTooltipDate(timestamp: string): string {
+  const date = new Date(timestamp);
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  }).format(date);
+}
+
+export function generateFakeRequestNumber(): string {
+  const suffix = Math.floor(100000 + Math.random() * 900000);
+  return `CT-${suffix}`;
+}
+</file>
+
+<file path="src/utils/id.ts">
+export function generateUniqueId(): string {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return crypto.randomUUID();
+  }
+
+  const randomChunk = Math.floor(Math.random() * 1000000);
+  return `ct-${Date.now()}-${randomChunk}`;
+}
+</file>
+
+<file path="src/utils/storage.ts">
+import { useEffect, useState } from 'react';
+
+type SetStateAction<T> = T | ((prev: T) => T);
+
+export function useLocalStorageState<T>(key: string, initialValue: T) {
+  const [state, setState] = useState<T>(() => {
+    if (typeof window === 'undefined') {
+      return initialValue;
+    }
+    const raw = window.localStorage.getItem(key);
+    if (raw) {
+      try {
+        return JSON.parse(raw) as T;
+      } catch (error) {
+        console.error('Failed to parse localStorage value:', error);
+      }
+    }
+    return initialValue;
+  });
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(state));
+    } catch (error) {
+      console.error('Failed to write to localStorage:', error);
+    }
+  }, [key, state]);
+
+  const setValue = (value: SetStateAction<T>) => {
+    setState(prev => (typeof value === 'function' ? (value as (prev: T) => T)(prev) : value));
+  };
+
+  return [state, setValue] as const;
+}
+</file>
+
+<file path="src/styles.css">
+:root {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #0b1d2a;
+  background-color: #f7f9fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: #061b32;
+  color: #fff;
+  padding: 1rem 1.25rem;
+}
+
+header nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+header nav a.active {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+main {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+.status-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.maintenance-banner {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #f59e0b;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.search-form {
+  background: #fff;
+  padding: 1.25rem;
+  border-radius: 8px;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.search-form label {
+  font-weight: 600;
+}
+
+.search-form input,
+.search-form select {
+  border: 1px solid #cbd5f5;
+  border-radius: 4px;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.search-form .form-row {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.summary-bar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.summary-chip {
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.summary-chip.active {
+  background: #e6fffa;
+  color: #0f766e;
+}
+
+.summary-chip.expired {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.summary-chip.suspended {
+  background: #ffe4e6;
+  color: #b91c1c;
+}
+
+.status-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-height: 260px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-pill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.status-pill.active {
+  background: #ecfeff;
+  color: #0f766e;
+}
+
+.status-pill.expired {
+  background: #fff1f2;
+  color: #b91c1c;
+}
+
+.status-pill.suspended {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.discipline-banner {
+  border: 1px solid #fcd34d;
+  background: #fff7cd;
+  padding: 0.75rem;
+  border-radius: 6px;
+}
+
+.discipline-banner a {
+  color: #b45309;
+  text-decoration: underline;
+}
+
+.card-actions {
+  margin-top: auto;
+}
+
+.card-actions button {
+  width: 100%;
+  padding: 0.65rem;
+  border: none;
+  border-radius: 6px;
+  background: #0f172a;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.card-actions button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 100;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 10px;
+  width: min(600px, 100%);
+  padding: 1.5rem;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+  position: relative;
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+.modal form {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.modal .preview {
+  border: 1px dashed #94a3b8;
+  padding: 1rem;
+  border-radius: 8px;
+  position: relative;
+  min-height: 180px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.modal .preview::after {
+  content: 'Synthetic Demo Seal';
+  position: absolute;
+  inset: 20px;
+  border: 2px dashed rgba(15, 23, 42, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(15, 23, 42, 0.25);
+  font-size: 1.5rem;
+  letter-spacing: 0.6rem;
+  transform: rotate(-7deg);
+  pointer-events: none;
+}
+
+.modal .preview-content {
+  position: relative;
+  z-index: 1;
+}
+
+.modal footer {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.modal button {
+  padding: 0.65rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.modal button.primary {
+  background: #0f172a;
+  color: #fff;
+}
+
+.modal button.secondary {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.modal button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.audit-controls {
+  display: grid;
+  gap: 0.75rem;
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.audit-controls .actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.audit-controls button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.audit-controls button.reset {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.audit-controls button.apply {
+  background: #0f172a;
+  color: #fff;
+}
+
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.audit-table th,
+.audit-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.audit-table th {
+  background: #f8fafc;
+}
+
+.empty-state {
+  padding: 1rem;
+  background: #fff7ed;
+  border-radius: 8px;
+  border: 1px dashed #fb923c;
+}
+</file>
+
+<file path="tests/fixtures/records.ts">
+export const Records = {
+  alex: {
+    id: 'CT-1001',
+    name: 'Alex Jordan',
+    state: 'CA'
+  },
+  maya: {
+    id: 'CT-1024',
+    name: 'Maya Patel',
+    state: 'TX'
+  },
+  jordan: {
+    id: 'CT-1088',
+    name: 'Jordan Lee',
+    state: 'NY'
+  }
+};
+</file>
+
+<file path="tests/pages/RecordPage.ts">
+import { expect, Locator, Page } from '@playwright/test';
+
+export class RecordPage {
+  readonly card: Locator;
+  readonly requestButton: Locator;
+  readonly disciplineBanner: Locator;
+  readonly maintenanceHint: Locator;
+
+  constructor(private page: Page, private recordId: string) {
+    this.card = page.locator('article.status-card', { hasText: recordId });
+    this.requestButton = this.card.getByRole('button', { name: 'Request verification' });
+    this.disciplineBanner = this.card.locator('.discipline-banner');
+    this.maintenanceHint = this.card.locator(`#maintenance-${recordId}`);
+  }
+
+  async requestVerification() {
+    await this.requestButton.click();
+  }
+
+  async expectDisciplineBannerVisible() {
+    await expect(this.disciplineBanner).toBeVisible();
+  }
+
+  async expectDisciplineBannerHidden() {
+    await expect(this.disciplineBanner).toHaveCount(0);
+  }
+
+  async expectRequestButtonDisabled() {
+    await expect(this.requestButton).toBeDisabled();
+  }
+
+  async expectMaintenanceHint(message: string) {
+    await expect(this.maintenanceHint).toHaveText(message);
+  }
+}
+</file>
+
+<file path="tests/smoke/search.spec.ts">
+import { expect, test } from '@playwright/test';
+import { RecordPage } from '../pages/RecordPage';
+import { SearchPage } from '../pages/SearchPage';
+import { VerificationPage } from '../pages/VerificationPage';
+import { Records } from '../fixtures/records';
+
+const summaryText = {
+  single: '1 record found',
+  none: '0 records found'
+};
+
+const maintenanceMessage = 'Automation maintenance banner';
+
+test.describe('Smoke coverage', () => {
+  test('search by ID returns the correct entry @smoke', async ({ page }) => {
+    const searchPage = new SearchPage(page);
+    await searchPage.goto();
+
+    await searchPage.searchById(Records.alex.id);
+    await searchPage.expectRecordCount(1);
+    await expect(searchPage.getResultCard(Records.alex.id)).toContainText(Records.alex.name);
+    await searchPage.expectSummaryText(summaryText.single);
+  });
+
+  test('combined first/last/state filters surface a single record @smoke', async ({ page }) => {
+    const searchPage = new SearchPage(page);
+    await searchPage.goto();
+
+    await searchPage.searchByNameAndState('Maya', 'Patel', Records.maya.state);
+    await searchPage.expectRecordCount(1);
+    await expect(searchPage.getResultCard(Records.maya.id)).toContainText(Records.maya.name);
+    await searchPage.expectSummaryText(summaryText.single);
+  });
+
+  test('invalid lookup surfaces the empty state @smoke', async ({ page }) => {
+    const searchPage = new SearchPage(page);
+    await searchPage.goto();
+
+    await searchPage.searchById('CT-9999');
+    await searchPage.expectNoResults();
+    await searchPage.expectSummaryText(summaryText.none);
+  });
+
+  test('verification modal enforces required fields @smoke', async ({ page }) => {
+    const searchPage = new SearchPage(page);
+    await searchPage.goto();
+
+    const record = new RecordPage(page, Records.alex.id);
+    await record.requestVerification();
+
+    const verificationPage = new VerificationPage(page);
+    await verificationPage.submitForm('', '');
+    await verificationPage.expectValidationError('Recipient name and email are required.');
+  });
+
+  test('disciplinary banners only show for flagged practitioners @smoke', async ({ page }) => {
+    const searchPage = new SearchPage(page);
+    await searchPage.goto();
+
+    const mayaCard = new RecordPage(page, Records.maya.id);
+    await mayaCard.expectDisciplineBannerVisible();
+
+    const alexCard = new RecordPage(page, Records.alex.id);
+    await alexCard.expectDisciplineBannerHidden();
+  });
+
+  test('maintenance banner shows when the configuration overrides the UI @smoke', async ({ page }) => {
+    const searchPage = new SearchPage(page);
+    const encodedMessage = encodeURIComponent(maintenanceMessage);
+    await searchPage.goto(`/?maintenance=true&maintenanceMessage=${encodedMessage}`);
+
+    const banner = page.locator('.maintenance-banner');
+    await expect(banner).toBeVisible();
+    await expect(banner).toContainText(/Maintenance mode/i);
+    await expect(banner).toContainText(maintenanceMessage);
+
+    const record = new RecordPage(page, Records.alex.id);
+    await record.expectRequestButtonDisabled();
+    await record.expectMaintenanceHint(maintenanceMessage);
+  });
+});
+</file>
+
+<file path="index.html">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CertiTrace Portal</title>
+    <meta name="description" content="Synthetic QA portal for certification verification." />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": ["DOM", "DOM.Iterable", "ES2021"],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"],
+  "references": []
+}
+</file>
+
+<file path="vite.config.ts">
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  base: '/CertiTrace/',
+  plugins: [react()],
+});
+</file>
+
+<file path=".github/workflows/deploy-pages.yml">
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Build app
+        run: npm run build
+
+      - name: Run Playwright end-to-end suite
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+
+      - name: Build Pages payload
+        run: |
+          rm -rf site
+          mkdir -p site
+          cp -R dist/. site/
+          mkdir -p site/reports/latest
+          if [ -d playwright-report ]; then
+            rm -rf site/reports/latest/*
+            cp -R playwright-report/. site/reports/latest/
+          fi
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: site
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to Pages
+        uses: actions/deploy-pages@v4
+        with:
+          wait-for-deployment: true
+</file>
+
+<file path="qa/release-criteria.md">
+# Phase 1 Release Criteria
+
+This release criteria list gates moving beyond QA scoping into implementation. All items must be satisfied with artifacts captured in the repo or GitHub evidence before Phase 1 is considered complete.
+
+1. **Requirements locked in:** `qa/requirements.md` lists 10–12 functional and 5–6 non-functional requirements with acceptance details. Evidence: Markdown file versioned in repo.
+2. **Traceability matrix published:** `qa/rtm.csv` maps every requirement to a risk entry, and each row lists placeholder manual and automation IDs to be filled later. Evidence: CSV file and initial commit.
+3. **Risk register approved:** `qa/risk-register.md` captures key risks, owners, likelihood/impact, and linked requirements. Evidence: risk register file and risk sign-off (e.g., GitHub review). 
+4. **Test plan drafted:** `qa/test-plan.md` outlines QA phases, tooling, test data guidance, and automation strategy that references the planned Playwright suites, manual suites, and CI pipeline. Evidence: Markdown file.
+5. **Automation readiness:** GitHub Actions workflow draft (or plan) describes Playwright smoke/functional/regression projects covering Chromium, Firefox, WebKit, plus HTML report storage. Evidence can be repo action file or README note until pipeline is created.
+6. **Defect process documented:** `defects/README.md` explains how to file GitHub Issues/Projects, link to RTM IDs, and store screenshots under `defects/screenshots/`. Evidence: README file committed.
+7. **Synthetic data/config visibility:** Documented data sources for search results (`src/data/records.json`) and maintenance toggles (`src/config/maintenance.json`) exist or are referenced so QA understands stimuli. Evidence: file stubs or README references.
+8. **CI coverage verification:** Playwright suites (at least smoke) are executed and reported via GitHub Actions on one push/PR; artifact or log exists even if scripted for later. Evidence: action run log or placeholder pipeline description.
+
+## Phase 4 Release Criteria (Manual QA Pack)
+
+This section formalizes the Phase 4 handoff once the manual QA pack is executed.
+
+1. **Manual suites delivered:** `manual/smoke-suite.md`, `manual/functional-suite.md`, `manual/regression-suite.md`, `manual/uat-suite.md`, and `manual/defect-template.md` exist and the tests reference the `MAN-*` IDs recorded in `qa/rtm.csv`.
+2. **Smoke suite:** 100% pass in every browser (Chromium, Firefox, WebKit). Log dates and tester names, then append screenshots or report links under `defects/screenshots/` when issues arise.
+3. **Regression suite:** ≥95% pass rate across all entries; any failure must link to a documented defect.
+4. **Cross-browser verification:** The smoke suite must be executed and recorded for Chromium, Firefox, and WebKit with their pass/fail results captured in both `manual/uat-suite.md` and this release criteria document.
+5. **Defect policy:** No open Severity 1 (critical) defects; max one open Severity 2 with a documented workaround (per `manual/defect-template.md` and `defects/README.md`).
+6. **RTM & release artifacts:** All `MAN-*` IDs are referenced in `qa/rtm.csv`, and the manual suites link back to release criteria via this document.
+7. **Final recommendation:** Use the table below to summarize the Go/No-Go decision before the release candidate is signed off.
+
+| Item | Status / Notes |
+| --- | --- |
+| Smoke suite pass rate | |
+| Regression suite pass rate | |
+| Chromium smoke status | |
+| Firefox smoke status | |
+| WebKit smoke status | |
+| Open defects (Sev 2 or higher) | |
+| Release date | |
+| Reviewer | |
+| Final recommendation | Go if every gating item above is satisfied; otherwise select No-Go and document remediation steps. |
+
+> Update the Final recommendation row after manual regression/UAT execution completes so the decision is traceable. If anything changes (e.g., a new defect appears), revisit this table before declaring Go.
+
+Meeting each criterion ensures Phase 1 delivers a QA-ready foundation before engineering work accelerates.
+</file>
+
+<file path="qa/test-plan.md">
+# CertiTrace QA Test Plan (Phase 1)
+
+## Scope
+This plan covers QA work required to satisfy Phase 1 scoping: requirements documentation, traceability, risk mitigation, and readiness for automation. The scope mirrors the NCCPA-style verification workflow described in `qa/requirements.md` and concentrates on user-visible behavior (search, status, banners, verification, audit logging, maintenance controls) without touching production data.
+
+## Strategy & Principles
+- **User-visible behavior:** Tests drive the experience from the user's perspective (search, banners, modals) following Playwright best practices (`getByRole`, `getByLabel`, `getByText`).
+- **Accessibility-first:** Keyboard flows and semantic markup are validated early as part of manual checks and automated scripts.
+- **Isolated tests:** Every Playwright test is designed so it can run independently in Chromium/Firefox/WebKit projects.
+- **Observability:** Maintenance-mode toggles and audit log writes are surfaced both in UI assertions and CI logs.
+
+## Tooling & Environment
+- **Frontend:** React + Vite + TypeScript (per the recommended zero-cost stack).
+- **Automation:** Playwright suites stored under `tests/` with a focus on smoke, functional, and regression coverage.
+- **CI:** GitHub Actions runs Playwright on every push/PR with multi-browser (Chromium, Firefox, WebKit) projects and publishes the HTML reporter as an artifact.
+- **Defects/Triage:** GitHub Issues and Projects capture defects and their RTM links; `defects/README.md` describes the process.
+- **Manual suites:** Documented under `manual/` (smoke/functional/regression/UAT) for Phase 2, ensuring every requirement has a manual test plan.
+
+## Testing Phases
+1. **Smoke (manual + automated):** Validate search entry points, status card rendering, and maintenance banner using Playwright fast checks before deeper exploration. Automation references `tests/smoke/` and manual checks reference `manual/smoke-suite.md` once crafted.
+2. **Functional (manual + automated):** Cover each functional requirement, verifying search filters, banners, verification modal, and audit workflows. Split responsibilities:
+   - Automated tests exercise repeatable flows (e.g., search combos, modals).
+   - Manual tests cover accessibility verification, persona-based scenarios, and edge cases like invalid input.
+3. **Regression:** After functional flows stabilize, regression suites guard against unintended banner or audit regressions and confirm new automation passes.
+
+## Entry / Exit Criteria
+- **Entry:** Requirements doc published, RTM skeleton live, automated test templates present, and synthetic data/mock config ready.
+- **Exit:** All 10–12 functional requirements mapped to test cases, RTM references manual/automation IDs, release criteria checklist complete, Playwright suites run successfully on GitHub Actions, and release evidence stored under `public/release/` or Action artifacts.
+
+## Manual vs. Automated Coverage
+- Manual testers will validate keyboard navigation, semantic labels, and interpretive guidance for empty or invalid states.
+- Automation focuses on consistent result rendering (e.g., CVT-SRCH-01 through CVT-HIST-01), verifying audit logging, maintenance toggles, and verification-modal behaviors.
+- Every requirement includes placeholder IDs in the RTM for manual (`TBD-MAN-##`) and automated (`TBD-AUTO-##`) coverage.
+- Manual IDs are now defined (`MAN-SRCH-01`, `MAN-STAT-01`, etc.) and mapped directly in `qa/rtm.csv`, letting testers link covered requirements back to each manual suite entry.
+
+## Manual QA Pack (Phase 4)
+The manual suites stored under `manual/` provide the Phase 4 artifacts for smoke, functional, regression, and UAT coverage. Each suite reuses the standard table format (`ID | Title | Requirement | Suite | Preconditions | Steps | Expected Result | Notes`) so testers can quickly scan, link to requirements, and capture results.
+
+- **Smoke suite (`manual/smoke-suite.md`):** six critical sanity checks (first/last-name searches, status card styling, verification request flow, and maintenance banner presence) that must pass 100% on Chromium, Firefox, and WebKit.
+- **Functional suite (`manual/functional-suite.md`):** 20 deep-dive scenarios covering search/filter combinations, status/history validation, disciplinary banner logic, verification modal validation, maintenance persistence, audit log creation, and keyboard navigation behavior.
+- **Regression suite (`manual/regression-suite.md`):** ten regression guards with extra columns for execution status (Pass/Fail/Blocked) and defect references to capture subtle regressions in search behavior, banner accessibility, maintenance gating, audit filters, and responsive layout.
+- **UAT suite (`manual/uat-suite.md`):** four stakeholder-ready checks (disciplinary announcements, maintenance-induced disablement, modal focus order, and cross-browser smoke verification) plus a final recommendation matrix.
+
+Testers should note which `MAN-*` ID they executed, attach any evidence under `defects/screenshots/`, and file defects using `manual/defect-template.md`.
+
+### Phase 4 Release Gates
+- **Smoke suite:** 100% pass across Chromium, Firefox, and WebKit executions.
+- **Regression suite:** ≥95% pass, with failures tied to documented, triaged defects.
+- **Cross-browser smoke:** Document the smoke suite status for each browser in the UAT summary and in `qa/release-criteria.md`.
+- **Defect policy:** No open Severity 1 (Sev 1) defects; at most one open Severity 2 with a documented workaround.
+- **RTM and manual documentation:** Every `MAN-*` ID referenced in the suites is listed under the Manual TC IDs column in `qa/rtm.csv`, and the release criteria document retains the final Go/No-Go recommendation tied to these suites.
+
+## Test Data and Environment Guidelines
+- Use synthetic records defined under `src/data/records.json` (e.g., mix of active, expired, suspended statuses and disciplinary flags).
+- `src/config/maintenance.json` toggles maintenance mode for `CVT-MNT-01` and observability tests.
+- No production or real-world data is permitted; maintenance toggles must be documented in release notes.
+
+## Auditing & Logging Validation
+- Playwright suites include checks for audit entry creation whenever a search or verification action occurs (CVT-AUD-01).
+- Audit page filters (CVT-AUD-02) are scripted to filter by action/date/type and confirm reset behavior.
+
+## Test Evidence
+- Use Playwright HTML reports to document automated runs; store these in GitHub Actions artifacts and publish via GitHub Pages when ready.
+- Manual checklists (to be created under `manual/`) should reference requirement IDs and record tester sign-off.
+
+## Risk Mitigation
+Key risks (detail in `qa/risk-register.md`) include stale data, automation flakiness, and maintenance-mode misconfigurations; mitigation is tracked via RTM and defect IDs.
+</file>
+
+<file path="src/components/StatusCard.tsx">
+import React from 'react';
+import { CredentialRecord, CredentialStatus } from '../types';
+import { formatRelativeDate, formatTooltipDate } from '../utils/date';
+
+interface StatusCardProps {
+  record: CredentialRecord;
+  onRequestVerification: () => void;
+  disabled: boolean;
+  maintenanceMessage: string;
+}
+
+const statusStyles: Record<CredentialStatus, { color: string; background: string; icon: string }> = {
+  Active: { color: '#0f766e', background: '#ecfeff', icon: '✅' },
+  Expired: { color: '#c2410c', background: '#fff1f2', icon: '⚠️' },
+  Suspended: { color: '#991b1b', background: '#fee2e2', icon: '⛔' }
+};
+
+const StatusCard: React.FC<StatusCardProps> = ({ record, onRequestVerification, disabled, maintenanceMessage }) => {
+  const status = statusStyles[record.status];
+  const summaryId = `discipline-${record.id}`;
+  const shouldShowDisciplineBanner = record.disciplinaryAction && record.discipline;
+
+  return (
+    <article className="status-card">
+      <div className="card-header">
+        <div>
+          <p style={{ margin: 0, fontWeight: 600 }}>{`${record.firstName} ${record.lastName}`}</p>
+          <p style={{ margin: 0, color: '#475569' }}>{record.id}</p>
+        </div>
+        <span
+          className={`status-pill ${record.status.toLowerCase()}`}
+          style={{ color: status.color, background: status.background }}
+        >
+          <span aria-hidden>{status.icon}</span>
+          {record.status}
+        </span>
+      </div>
+      <p style={{ margin: 0 }}>
+        <span title={formatTooltipDate(record.lastVerified)} aria-label="Last verified timestamp">
+          {formatRelativeDate(record.lastVerified)}
+        </span>{' '}
+        · {record.source}
+      </p>
+
+      {shouldShowDisciplineBanner && (
+        <div className="discipline-banner" role="status" aria-live="polite" id={summaryId}>
+          <p style={{ margin: '0 0 0.25rem 0', fontWeight: 600 }}>Disciplinary action</p>
+          <p style={{ margin: 0 }}>{record.discipline.summary}</p>
+          <p style={{ margin: '0.25rem 0 0', fontSize: '0.85rem' }}>
+            Date: {record.discipline.date}
+            {' · '}
+            <a href="#" onClick={event => event.preventDefault()}>
+              View incident details
+            </a>
+          </p>
+        </div>
+      )}
+
+      <div className="card-actions">
+        <button
+          type="button"
+          onClick={onRequestVerification}
+          disabled={disabled}
+          aria-describedby={disabled ? `maintenance-${record.id}` : undefined}
+        >
+          Request verification
+        </button>
+        {disabled && (
+          <span id={`maintenance-${record.id}`} style={{ fontSize: '0.8rem', color: '#475569' }}>
+            {maintenanceMessage}
+          </span>
+        )}
+      </div>
+    </article>
+  );
+};
+
+export default StatusCard;
+</file>
+
+<file path="src/data/records.json">
+[
+  {
+    "id": "CT-1001",
+    "firstName": "Alex",
+    "lastName": "Jordan",
+    "state": "CA",
+    "status": "Active",
+    "lastVerified": "2026-02-10T14:35:00Z",
+    "source": "NCCPA sync",
+    "discipline": {
+      "summary": "Resolved disciplinary review",
+      "date": "2024-11-12"
+    },
+    "disciplinaryAction": false
+  },
+  {
+    "id": "CT-1024",
+    "firstName": "Maya",
+    "lastName": "Patel",
+    "state": "TX",
+    "status": "Expired",
+    "lastVerified": "2026-01-15T09:20:00Z",
+    "source": "Manual override",
+    "discipline": {
+      "summary": "Late CE reporting",
+      "date": "2025-12-04"
+    },
+    "disciplinaryAction": true
+  },
+  {
+    "id": "CT-1088",
+    "firstName": "Jordan",
+    "lastName": "Lee",
+    "state": "NY",
+    "status": "Suspended",
+    "lastVerified": "2026-01-28T12:00:00Z",
+    "source": "NCCPA sync",
+    "discipline": {
+      "summary": "Suspended for ethics review",
+      "date": "2025-10-11"
+    },
+    "disciplinaryAction": true
+  }
+]
+</file>
+
+<file path="src/pages/SearchPage.tsx">
+import React, { FormEvent, useMemo, useState } from 'react';
+import { CredentialRecord, SearchFilters } from '../types';
+import { useAuditEvents } from '../context/AuditContext';
+import StatusCard from '../components/StatusCard';
+import VerificationModal from '../components/VerificationModal';
+
+interface SearchPageProps {
+  records: CredentialRecord[];
+  maintenanceMode: boolean;
+  maintenanceMessage: string;
+}
+
+const initialFilters: SearchFilters = {
+  firstName: '',
+  lastName: '',
+  state: '',
+  certificationId: ''
+};
+
+const SearchPage: React.FC<SearchPageProps> = ({ records, maintenanceMode, maintenanceMessage }) => {
+  const { logEvent } = useAuditEvents();
+  const [filters, setFilters] = useState(initialFilters);
+  const [results, setResults] = useState<CredentialRecord[]>(records);
+  const [error, setError] = useState('');
+  const [hasSearched, setHasSearched] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState<CredentialRecord | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmittingVerification, setIsSubmittingVerification] = useState(false);
+
+  const stateOptions = useMemo(() => {
+    const states = Array.from(new Set(records.map(record => record.state)));
+    return states.sort();
+  }, [records]);
+
+  const summaryCounts = useMemo(
+    () => ({
+      Active: results.filter(record => record.status === 'Active').length,
+      Expired: results.filter(record => record.status === 'Expired').length,
+      Suspended: results.filter(record => record.status === 'Suspended').length
+    }),
+    [results]
+  );
+
+  const handleFieldChange = (field: keyof SearchFilters, value: string) => {
+    setFilters(prev => ({ ...prev, [field]: value }));
+  };
+
+  const buildFilterDetails = () =>
+    `Filters => firstName:${filters.firstName || 'any'} lastName:${filters.lastName || 'any'} state:${
+      filters.state || 'any'
+    } id:${filters.certificationId || 'any'}`;
+
+  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError('');
+    logEvent({
+      action: 'search submitted',
+      recordType: 'search',
+      recordId: filters.certificationId || 'N/A',
+      details: buildFilterDetails()
+    });
+
+    const trimmedFirstName = filters.firstName.trim();
+    if (filters.firstName && trimmedFirstName.length < 2) {
+      setError('First name requires at least 2 characters.');
+      return;
+    }
+
+    const filtered = records.filter(record => {
+      if (trimmedFirstName && !record.firstName.toLowerCase().includes(trimmedFirstName.toLowerCase())) {
+        return false;
+      }
+      if (filters.lastName && !record.lastName.toLowerCase().includes(filters.lastName.toLowerCase())) {
+        return false;
+      }
+      if (filters.state && record.state !== filters.state) {
+        return false;
+      }
+      if (filters.certificationId && record.id !== filters.certificationId) {
+        return false;
+      }
+      return true;
+    });
+
+    setResults(filtered);
+    setHasSearched(true);
+
+    if (filtered.length === 0) {
+      logEvent({
+        action: 'no-result search',
+        recordType: 'search',
+        recordId: 'none',
+        details: 'No records matched the filters.'
+      });
+    } else {
+      logEvent({
+        action: 'search returned record',
+        recordType: 'search',
+        recordId: filtered[0].id,
+        details: `${filtered.length} results returned`
+      });
+    }
+  };
+
+  const handleRequestVerification = (record: CredentialRecord) => {
+    setSelectedRecord(record);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedRecord(null);
+    setIsSubmittingVerification(false);
+  };
+
+  const handleVerificationSubmit = (
+    recipientName: string,
+    recipientEmail: string,
+    destinationState: string
+  ) => {
+    if (!selectedRecord) {
+      return;
+    }
+
+    if (isSubmittingVerification) {
+      return;
+    }
+
+    setIsSubmittingVerification(true);
+
+    logEvent({
+      action: 'verification request submitted',
+      recordType: 'verification',
+      recordId: selectedRecord.id,
+      details: `Letter for ${recipientName} (${recipientEmail}) to ${destinationState}`
+    });
+    handleModalClose();
+  };
+
+  const handleValidationFailure = (message: string) => {
+    if (!selectedRecord) {
+      return;
+    }
+
+    logEvent({
+      action: 'verification request validation failure',
+      recordType: 'verification',
+      recordId: selectedRecord.id,
+      details: message
+    });
+  };
+
+  const summaryText = hasSearched
+    ? `${results.length} record${results.length === 1 ? '' : 's'} found`
+    : 'Showing all records';
+
+  return (
+    <section aria-label="Credential search">
+      <form className="search-form" onSubmit={handleSearch}>
+        <div className="form-row">
+          <label>
+            First name
+            <input
+              name="firstName"
+              value={filters.firstName}
+              onChange={event => handleFieldChange('firstName', event.target.value)}
+              placeholder="Alex"
+              aria-describedby={error && filters.firstName ? 'firstNameHint' : undefined}
+            />
+          </label>
+          <label>
+            Last name
+            <input
+              name="lastName"
+              value={filters.lastName}
+              onChange={event => handleFieldChange('lastName', event.target.value)}
+              placeholder="Jordan"
+            />
+          </label>
+          <label>
+            State
+            <select
+              name="state"
+              value={filters.state}
+              onChange={event => handleFieldChange('state', event.target.value)}
+            >
+              <option value="">All states</option>
+              {stateOptions.map(state => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Certification ID
+            <input
+              name="certificationId"
+              value={filters.certificationId}
+              onChange={event => handleFieldChange('certificationId', event.target.value)}
+              placeholder="CT-1001"
+            />
+          </label>
+        </div>
+
+        {error && (
+          <p id="firstNameHint" style={{ color: '#b91c1c', margin: 0 }}>
+            {error}
+          </p>
+        )}
+
+        <button type="submit" aria-label="Submit search">
+          Search
+        </button>
+      </form>
+
+      <div className="summary-bar" role="status" aria-live="polite">
+        <span>{summaryText}</span>
+        <div style={{ display: 'flex', gap: '.5rem' }}>
+          <span className="summary-chip active" aria-label={`${summaryCounts.Active} active records`}>
+            Active {summaryCounts.Active}
+          </span>
+          <span className="summary-chip expired" aria-label={`${summaryCounts.Expired} expired records`}>
+            Expired {summaryCounts.Expired}
+          </span>
+          <span className="summary-chip suspended" aria-label={`${summaryCounts.Suspended} suspended records`}>
+            Suspended {summaryCounts.Suspended}
+          </span>
+        </div>
+      </div>
+
+      {results.length === 0 && hasSearched ? (
+        <div className="empty-state" role="status">
+          No records matched your search filters. Try broadening the criteria.
+        </div>
+      ) : (
+        <div className="status-grid">
+          {results.map(record => (
+            <StatusCard
+              key={record.id}
+              record={record}
+              onRequestVerification={() => handleRequestVerification(record)}
+              disabled={maintenanceMode}
+              maintenanceMessage={maintenanceMessage}
+            />
+          ))}
+        </div>
+      )}
+
+      {selectedRecord && (
+      <VerificationModal
+        open={isModalOpen}
+        record={selectedRecord}
+        disabled={maintenanceMode}
+        maintenanceMessage={maintenanceMessage}
+        stateOptions={stateOptions}
+        isSubmitting={isSubmittingVerification}
+        onClose={handleModalClose}
+        onSubmit={handleVerificationSubmit}
+        onValidationError={handleValidationFailure}
+      />
+      )}
+    </section>
+  );
+};
+
+export default SearchPage;
+</file>
+
+<file path="src/App.tsx">
+import React from 'react';
+import { NavLink, Routes, Route } from 'react-router-dom';
+import recordsData from './data/records.json';
+import getMaintenanceConfig from './config/maintenance';
+import SearchPage from './pages/SearchPage';
+import StaffAuditPage from './pages/StaffAuditPage';
+import MaintenanceBanner from './components/MaintenanceBanner';
+import { AuditProvider } from './context/AuditContext';
+
+function App() {
+  const maintenanceConfig = getMaintenanceConfig();
+  const maintenanceMode = maintenanceConfig.maintenanceMode;
+
+  return (
+    <div className="app-shell">
+      <header>
+        <nav aria-label="Primary">
+          <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')} end>
+            Search
+          </NavLink>
+          <NavLink to="/staff-audit" className={({ isActive }) => (isActive ? 'active' : '')}>
+            Staff audit log
+          </NavLink>
+        </nav>
+      </header>
+
+      {maintenanceMode && <MaintenanceBanner message={maintenanceConfig.message} />}
+
+      <main>
+        <AuditProvider>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <SearchPage
+                  records={recordsData}
+                  maintenanceMode={maintenanceMode}
+                  maintenanceMessage={maintenanceConfig.message}
+                />
+              }
+            />
+            <Route path="/staff-audit" element={<StaffAuditPage />} />
+          </Routes>
+        </AuditProvider>
+      </main>
+    </div>
+  );
+}
+
+export default App;
+</file>
+
+<file path="src/env.d.ts">
+declare interface ImportMetaEnv {
+  readonly VITE_MAINTENANCE_MODE?: string;
+  readonly VITE_MAINTENANCE_MESSAGE?: string;
+  readonly BASE_URL: string;
+  readonly [key: string]: string | undefined;
+}
+
+declare interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+</file>
+
+<file path="src/main.tsx">
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+import './styles.css';
+
+const baseUrl = import.meta.env.BASE_URL ?? '/';
+const routerBasename = baseUrl === '/' ? '/' : baseUrl.replace(/\/$/, '');
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <BrowserRouter basename={routerBasename}>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
+);
+</file>
+
+<file path="src/types.ts">
+export type CredentialStatus = 'Active' | 'Expired' | 'Suspended';
+
+export interface DisciplineInfo {
+  summary: string;
+  date: string;
+}
+
+export interface CredentialRecord {
+  id: string;
+  firstName: string;
+  lastName: string;
+  state: string;
+  status: CredentialStatus;
+  lastVerified: string;
+  source: string;
+  discipline: DisciplineInfo | null;
+  disciplinaryAction: boolean;
+}
+
+export type AuditAction =
+  | 'search submitted'
+  | 'search returned record'
+  | 'no-result search'
+  | 'verification request submitted'
+  | 'verification request validation failure'
+  | 'staff filter applied';
+
+export type AuditRecordType = 'search' | 'verification' | 'system';
+
+export interface AuditEvent {
+  id: string;
+  action: AuditAction;
+  user: string;
+  recordId: string;
+  recordType: AuditRecordType;
+  timestamp: string;
+  details: string;
+}
+
+export type AuditPayload = Omit<AuditEvent, 'id' | 'timestamp'>;
+
+export interface SearchFilters {
+  firstName: string;
+  lastName: string;
+  state: string;
+  certificationId: string;
+}
+</file>
+
+<file path="tests/pages/AuditLogPage.ts">
+import { expect, Locator, Page } from '@playwright/test';
+
+export class AuditLogPage {
+  readonly page: Page;
+  readonly table: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.table = page.locator('table.audit-table');
+  }
+
+  async goto() {
+    await this.page.goto('./staff-audit');
+    await expect(this.table).toBeVisible();
+  }
+
+  getRows() {
+    return this.table.locator('tbody tr');
+  }
+
+  getEventRows(action: string, recordId: string) {
+    return this.getRows().filter({ hasText: action }).filter({ hasText: recordId });
+  }
+
+  async expectEventCount(action: string, recordId: string, expected: number) {
+    await expect(this.getEventRows(action, recordId)).toHaveCount(expected);
+  }
+}
+</file>
+
+<file path="tests/pages/SearchPage.ts">
+import { expect, Locator, Page } from '@playwright/test';
+
+export class SearchPage {
+  readonly page: Page;
+  readonly firstNameInput: Locator;
+  readonly lastNameInput: Locator;
+  readonly stateSelect: Locator;
+  readonly certificationIdInput: Locator;
+  readonly searchButton: Locator;
+  readonly emptyState: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.firstNameInput = page.getByLabel('First name');
+    this.lastNameInput = page.getByLabel('Last name');
+    this.stateSelect = page.getByLabel('State');
+    this.certificationIdInput = page.getByLabel('Certification ID');
+    this.searchButton = page.getByRole('button', { name: 'Search' });
+    this.emptyState = page.locator('.empty-state');
+  }
+
+  async goto(path = '/') {
+    const normalizedPath = path === '/' ? './' : path.startsWith('/') ? `.${path}` : path;
+    await this.page.goto(normalizedPath);
+  }
+
+  async submitSearch() {
+    await this.searchButton.click();
+  }
+
+  async searchById(id: string) {
+    await this.certificationIdInput.fill(id);
+    await this.submitSearch();
+  }
+
+  async searchByNameAndState(firstName: string, lastName: string, state: string) {
+    await this.firstNameInput.fill(firstName);
+    await this.lastNameInput.fill(lastName);
+    await this.stateSelect.selectOption(state);
+    await this.submitSearch();
+  }
+
+  getResultCard(recordId: string) {
+    return this.page.locator('article.status-card', { hasText: recordId });
+  }
+
+  async expectRecordCount(count: number) {
+    await expect(this.page.locator('article.status-card')).toHaveCount(count);
+  }
+
+  async expectSummaryText(expected: string) {
+    await expect(this.page.locator('.summary-bar > span').first()).toHaveText(expected);
+  }
+
+  async expectNoResults() {
+    await expect(this.emptyState).toBeVisible();
+  }
+
+  async resetFilters() {
+    await this.firstNameInput.fill('');
+    await this.lastNameInput.fill('');
+    await this.stateSelect.selectOption('');
+    await this.certificationIdInput.fill('');
+  }
+}
+</file>
+
+<file path="tests/pages/VerificationPage.ts">
+import { expect, Page } from '@playwright/test';
+
+export class VerificationPage {
+  readonly dialog = this.page.getByRole('dialog', { name: 'Request verification letter' });
+  readonly recipientNameInput = this.dialog.getByLabel('Recipient name');
+  readonly recipientEmailInput = this.dialog.getByLabel('Recipient email');
+  readonly submitButton = this.dialog.getByRole('button', { name: 'Submit request' });
+  readonly cancelButton = this.dialog.getByRole('button', { name: 'Cancel' });
+  readonly validationAlert = this.dialog.getByRole('alert');
+  readonly destinationStateSelect = this.dialog.getByLabel('Destination state');
+
+  constructor(private page: Page) {}
+
+  async submitForm(recipientName: string, recipientEmail: string, destinationState?: string) {
+    await this.recipientNameInput.fill(recipientName);
+    await this.recipientEmailInput.fill(recipientEmail);
+    if (destinationState !== undefined) {
+      await this.destinationStateSelect.selectOption(destinationState);
+    }
+    await this.submitButton.click();
+  }
+
+  async expectValidationError(message: string) {
+    await expect(this.validationAlert).toHaveText(message);
+  }
+
+  async cancel() {
+    await this.cancelButton.click();
+  }
+}
+</file>
+
+<file path="tests/regression/bugs.spec.ts">
+import { test } from '@playwright/test';
+import { AuditLogPage } from '../pages/AuditLogPage';
+import { RecordPage } from '../pages/RecordPage';
+import { SearchPage } from '../pages/SearchPage';
+import { VerificationPage } from '../pages/VerificationPage';
+import { Records } from '../fixtures/records';
+
+const emailErrorMessage = 'Enter a valid email address.';
+
+test.describe('Regression guardrails', () => {
+  test('disciplinary banner logic stays scoped to flagged records @regression', async ({ page }) => {
+    const searchPage = new SearchPage(page);
+    await searchPage.goto();
+
+    await searchPage.searchById(Records.alex.id);
+    const alexCard = new RecordPage(page, Records.alex.id);
+    await alexCard.expectDisciplineBannerHidden();
+
+    await searchPage.searchById(Records.maya.id);
+    const mayaCard = new RecordPage(page, Records.maya.id);
+    await mayaCard.expectDisciplineBannerVisible();
+  });
+
+  test('verification modal validation gap closes malformed submissions @regression', async ({ page }) => {
+    const searchPage = new SearchPage(page);
+    await searchPage.goto();
+
+    const record = new RecordPage(page, Records.maya.id);
+    await record.requestVerification();
+
+    const verificationPage = new VerificationPage(page);
+    await verificationPage.submitForm('QA Team', 'qa-team', Records.maya.state);
+    await verificationPage.expectValidationError(emailErrorMessage);
+
+    await verificationPage.recipientEmailInput.fill('qa-team@example.com');
+    await verificationPage.destinationStateSelect.selectOption('');
+    await verificationPage.submitForm('QA Team', 'qa-team@example.com');
+    await verificationPage.expectValidationError('Select a destination state.');
+
+    await verificationPage.cancel();
+  });
+
+  test('audit log avoids duplicate verification entries @regression', async ({ page }) => {
+    const searchPage = new SearchPage(page);
+    await searchPage.goto();
+
+    const card = new RecordPage(page, Records.alex.id);
+    await card.requestVerification();
+
+    const verificationPage = new VerificationPage(page);
+    await verificationPage.submitForm('QA Team', 'qa-team@example.com', Records.alex.state);
+
+    const auditLogPage = new AuditLogPage(page);
+    await auditLogPage.goto();
+
+    await auditLogPage.expectEventCount('verification request submitted', Records.alex.id, 1);
+  });
+});
+</file>
+
+<file path="package.json">
+{
+  "name": "certitrace-portal",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:e2e": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.8.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "typescript": "^5.4.2",
+    "vite": "^5.2.0"
+  }
+}
+</file>
+
+<file path="qa/rtm.csv">
+Req ID,Requirement,Risk,Manual TC IDs,Automation IDs,Defect IDs,Status
+CVT-SRCH-01,Search by first name,RISK-SEARCH-01,MAN-SRCH-01; MAN-SRCH-02,TBD-AUTO-01,-,Defined
+CVT-SRCH-02,Search by last name,RISK-SEARCH-01,MAN-SRCH-03; MAN-SRCH-05; MAN-SRCH-11,TBD-AUTO-02,-,Defined
+CVT-SRCH-03,Search by state,RISK-SEARCH-01,MAN-SRCH-04; MAN-SRCH-05,TBD-AUTO-03,-,Defined
+CVT-SRCH-04,Search by ID,RISK-SEARCH-01,MAN-SRCH-06; MAN-SRCH-07,TBD-AUTO-04,-,Defined
+CVT-STAT-01,Status card display,RISK-STATUS-01,MAN-STAT-01; MAN-STAT-02; MAN-STAT-03; MAN-STAT-05; MAN-STAT-06,TBD-AUTO-05,-,Defined
+CVT-DISC-01,Disciplinary banner,RISK-DISC-01,MAN-DISC-01; MAN-DISC-02; MAN-DISC-03; MAN-DISC-04; MAN-DISC-05,REG-DISC-01,-,Defined
+CVT-VER-01,Request verification letter,RISK-VER-01,MAN-VER-01; MAN-VER-02; MAN-VER-03; MAN-VER-04; MAN-VER-05; MAN-VER-06; MAN-VER-07,REG-VER-01,-,Defined
+CVT-MNT-01,Maintenance banner,RISK-MNT-01,MAN-MNT-01; MAN-MNT-02; MAN-MNT-03,TBD-AUTO-08,-,Defined
+CVT-AUD-01,Audit logging,RISK-AUDIT-01,MAN-AUD-01; MAN-AUD-02,REG-AUD-01,-,Defined
+CVT-AUD-02,Audit filters,RISK-AUDIT-01,MAN-AUD-03; MAN-AUD-04,TBD-AUTO-10,-,Defined
+CVT-RES-01,Search summary metrics,RISK-RES-01,MAN-SRCH-04; MAN-SRCH-05; MAN-SRCH-08; MAN-SRCH-09; MAN-SRCH-12,TBD-AUTO-11,-,Defined
+CVT-HIST-01,Last verified context,RISK-STATUS-01,MAN-STAT-04; MAN-STAT-05,TBD-AUTO-12,-,Defined
+</file>
+
+<file path="src/components/VerificationModal.tsx">
+import React, { FormEvent, useEffect, useState } from 'react';
+import { CredentialRecord } from '../types';
+import { generateFakeRequestNumber, formatTooltipDate } from '../utils/date';
+
+interface VerificationModalProps {
+  open: boolean;
+  record: CredentialRecord;
+  disabled: boolean;
+  maintenanceMessage: string;
+  onClose: () => void;
+  onSubmit: (recipientName: string, recipientEmail: string, destinationState: string) => void;
+  onValidationError: (message: string) => void;
+  stateOptions: string[];
+  isSubmitting: boolean;
+}
+
+const VerificationModal: React.FC<VerificationModalProps> = ({
+  open,
+  record,
+  disabled,
+  maintenanceMessage,
+  onClose,
+  onSubmit,
+  onValidationError,
+  stateOptions,
+  isSubmitting
+}) => {
+  const [recipientName, setRecipientName] = useState('');
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [error, setError] = useState('');
+  const [previewNumber, setPreviewNumber] = useState(generateFakeRequestNumber());
+  const [previewTimestamp, setPreviewTimestamp] = useState(new Date().toISOString());
+  const [destinationState, setDestinationState] = useState('');
+
+  useEffect(() => {
+    if (open) {
+      setRecipientName('');
+      setRecipientEmail('');
+      setError('');
+      setPreviewNumber(generateFakeRequestNumber());
+      setPreviewTimestamp(new Date().toISOString());
+      setDestinationState('');
+    }
+  }, [open]);
+
+  if (!open) {
+    return null;
+  }
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError('');
+
+    const trimmedName = recipientName.trim();
+    const trimmedEmail = recipientEmail.trim();
+
+    if (!trimmedName || !trimmedEmail) {
+      const message = 'Recipient name and email are required.';
+      setError(message);
+      onValidationError(message);
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      const message = 'Enter a valid email address.';
+      setError(message);
+      onValidationError(message);
+      return;
+    }
+
+    const selectedState = destinationState.trim();
+    if (!selectedState) {
+      const message = 'Select a destination state.';
+      setError(message);
+      onValidationError(message);
+      return;
+    }
+
+    onSubmit(trimmedName, trimmedEmail, selectedState);
+  };
+
+  return (
+    <div className="modal-backdrop" role="presentation">
+      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="verification-dialog-title">
+        <h2 id="verification-dialog-title">Request verification letter</h2>
+        <p style={{ marginTop: 0 }}>
+          Letter for {record.firstName} {record.lastName} ({record.id})
+        </p>
+        <form onSubmit={handleSubmit} noValidate>
+          <label>
+            Recipient name
+            <input
+              name="recipientName"
+              value={recipientName}
+              onChange={event => setRecipientName(event.target.value)}
+              placeholder="Quality Assurance Office"
+            />
+          </label>
+          <label>
+            Recipient email
+            <input
+              name="recipientEmail"
+              value={recipientEmail}
+              onChange={event => setRecipientEmail(event.target.value)}
+              placeholder="qa.team@example.com"
+              type="email"
+            />
+          </label>
+          <label>
+            Destination state
+            <select
+              name="destinationState"
+              value={destinationState}
+              onChange={event => setDestinationState(event.target.value)}
+            >
+              <option value="">Select a destination state</option>
+              {stateOptions.map(state => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {error && (
+            <p style={{ color: '#b91c1c', margin: 0 }} role="alert">
+              {error}
+            </p>
+          )}
+
+          <div className="preview" aria-label="Generated verification letter preview">
+            <div className="preview-content">
+              <p style={{ fontWeight: 600, margin: 0 }}>Verification letter preview</p>
+              <p style={{ margin: '0.5rem 0 0' }}>Request number: {previewNumber}</p>
+              <p style={{ margin: '0.25rem 0' }} title={formatTooltipDate(previewTimestamp)}>
+                Issued {new Date(previewTimestamp).toLocaleString()}
+              </p>
+              <p style={{ margin: '0.25rem 0' }}>
+                This synthetic letter confirms {record.firstName} {record.lastName} ({record.id}) holds a{' '}
+                {record.status} credential in {record.state}.
+              </p>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569' }}>
+                Seal: synthetic demo seal (not NCCPA)
+              </p>
+            </div>
+          </div>
+          <div>
+            <p style={{ fontSize: '0.85rem', margin: '0.5rem 0' }}>
+              Document type: Certification verification summary
+            </p>
+          </div>
+          <div>
+            <p style={{ margin: 0 }}>
+              {disabled ? (
+                <span id="maintenance-note">{maintenanceMessage}</span>
+              ) : (
+                <span>Verification requests are stored for QA evidence.</span>
+              )}
+            </p>
+          </div>
+          <footer>
+            <button type="button" className="secondary" onClick={onClose}>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="primary"
+              disabled={disabled || isSubmitting}
+              aria-describedby={disabled ? 'maintenance-note' : undefined}
+              aria-busy={isSubmitting ? 'true' : undefined}
+            >
+              Submit request
+            </button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default VerificationModal;
+</file>
+
+<file path=".gitignore">
+node_modules/
+dist/
+.DS_Store
+.idea/
+npm-debug.log*
+playwright-report/*
+!playwright-report/index.html
+tests/test-results/
+</file>
+
+<file path="playwright.config.ts">
+import { defineConfig, devices } from '@playwright/test';
+
+const PORT = 4173;
+const BASE_PATH = '/CertiTrace';
+const BASE_URL = `http://127.0.0.1:${PORT}${BASE_PATH}/`;
+
+export default defineConfig({
+  testDir: './tests',
+  testMatch: '**/*.spec.ts',
+  timeout: 30 * 1000,
+  expect: {
+    timeout: 5000
+  },
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: [['list'], ['html', { outputFolder: 'playwright-report' }]],
+  use: {
+    baseURL: BASE_URL,
+    actionTimeout: 5 * 1000,
+    trace: 'on-first-retry',
+    video: 'retain-on-failure',
+    screenshot: 'only-on-failure'
+  },
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] }
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] }
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] }
+    }
+  ],
+  webServer: {
+    command: `npm run dev -- --host 0.0.0.0 --port ${PORT}`,
+    port: PORT,
+    timeout: 120 * 1000,
+    reuseExistingServer: process.env.CI ? false : true,
+    env: {
+      NODE_ENV: 'test'
+    }
+  },
+  outputDir: 'tests/test-results'
+});
+</file>
+
+<file path="README.md">
+# CertiTrace QA Lab
+
+Synthetic healthcare certification-validation experience designed to demonstrate manual testing rigor, Playwright automation, defect triage, and CI-published evidence side-by-side.
+
+## Table of contents
+- Product story and impact
+- Highlights & behaviors
+- Architecture & data flows
+- Getting started
+- Automated testing
+- QA documentation & manual suites
+- Defect management & packaging
+- Release, deployment, and artifacts
+- Supporting resources
+
+## Product story and impact
+CertiTrace simulates the NCCPA-style workflow for searching practitioner records, evaluating credential status, surfacing disciplinary history, requesting verification letters, and auditing every interaction. The goal is to give recruiters, hiring managers, or QA leads a single artifact that proves: requirements coverage was defined (`qa/requirements.md`), tests were executed (`tests/` + PlaywrightReports), defects were triaged (`defects/README.md`), and every sprint-to-release checkpoint is documented (`qa/release-criteria.md`).
+
+## Highlights & behaviors
+- **Search-first UI:** filters for first name, last name, state, and certification ID update the status-card grid and summary chips in real time (see `src/pages/SearchPage.tsx`).
+- **Status cards:** color-coded pills/authentic icons (`StatusCard.tsx`) show Active, Expired, Suspended states; disciplinary banners only render when `disciplinaryAction` is `true` and include incident summaries.
+- **Verification workflow:** clicking `Request verification` opens a modal that validates recipient name/email, destination state, and previews a synthetic letter; submissions write to the audit log via `AuditContext` with `localStorage` persistence (`src/context/AuditContext.tsx`).
+- **Maintenance & observability:** `src/config/maintenance.json` + overrides handle banner display, disable verification controls, and surface reasons (also controllable via `VITE_MAINTENANCE_MODE`, query params, or runtime overrides).
+- **Audit log page:** filters by action, record type, and date range while sorting events in reverse chronological order to support compliance demos (`src/pages/StaffAuditPage.tsx`).
+
+## Architecture & data flows
+- **Stack:** Vite + React 18 + TypeScript + React Router for SPA navigation. `main.tsx` wires `BrowserRouter`, global styles, and `App`.
+- **Data:** synthetic records live in `src/data/records.json` and include mixed statuses plus disciplinary metadata. Summary chips recompute counts from the current result set.
+- **Context:** audit events are stored in `localStorage` via `useLocalStorageState` (`src/utils/storage.ts`) and indexed with CLI-friendly IDs (`src/utils/id.ts`). The context logs actions such as `search submitted`, `search returned record`, `verification request submitted`, and `staff filter applied`.
+- **Utility functions:** `src/utils/date.ts` formats relative/verbatim timestamps and generates fake request numbers for the verification preview; this keeps the UI polished while staying deterministic for automation.
+
+## Getting started
+1. **Prerequisites:** Node.js 20.x (workflow uses `actions/setup-node@v5`), npm 10+, and a browser to preview the UI.
+2. **Install dependencies:** `npm ci` (preferred for CI parity) or `npm install` for local experimentation.
+3. **Run locally:** `npm run dev -- --host 0.0.0.0 --port 4173` then open http://localhost:4173.
+4. **Build for production:** `npm run build` (outputs to `dist/`).
+5. **Preview build:** `npm run preview` serves the production bundle on a temporary server.
+
+### Environment & maintenance overrides
+- Change `src/config/maintenance.json` to toggle maintenance and update the `message` shown at the top of every page.
+- Set `VITE_MAINTENANCE_MODE=true` or append `?maintenance=true&maintenanceMessage=Your+Message` to the URL to supply ad-hoc overrides during demos.
+- Global overrides can also be injected at runtime via `window.__CERTITRACE_MAINTENANCE_MODE` and `window.__CERTITRACE_MAINTENANCE_MESSAGE` (see `src/config/maintenance.ts`).
+
+## Automated testing
+- **Playwright suites:** smoke (`tests/smoke`), regression (`tests/regression/bugs.spec.ts`), and supporting page objects under `tests/pages/` keep automation maintainable.
+- **Commands:** `npm run test:e2e` runs the full matrix (Chromium/Firefox/WebKit) via `playwright.config.ts`; `npm run test:smoke` and `npm run test:regression` run tagged subsets.
+- **Report output:** HTML reports land in `playwright-report/` and are refreshed through CI into `site/reports/latest/` for portfolio evidence.
+- **Fixture data:** `tests/fixtures/records.ts` mirrors `src/data/records.json` so automation targets stable records (Alex/Maya/Jordan). Page objects focus on accessibility by using `getByRole` and `getByLabel` selectors.
+
+## QA documentation & manual suites
+- **Requirements & traceability:** `qa/requirements.md` defines CVT and NFR IDs; `qa/rtm.csv` maps each ID to manual (`MAN-*`) and automation (`AUTO-*`) coverage plus linked risks.
+- **Test plan:** `qa/test-plan.md` explains scope, tooling, phases, and ties every requirement to manual+automation expectations.
+- **Risk register:** `qa/risk-register.md` documents risks (search accuracy, status freshness, maintenance misconfiguration, etc.) and links them to owners/requirements.
+- **Release gating:** `qa/release-criteria.md` lists Phase 1 and Phase 4 release gates (smoke/regression pass rates, defect policy, cross-browser verification, final recommendation matrix).
+- **Manual suites:** The `manual/` folder contains templated suites for smoke, functional, regression, and UAT plus `manual/defect-template.md`. Each suite uses a standard table format that references requirement IDs and includes manual test IDs (e.g., `MAN-SRCH-04`).
+
+## Defect management & packaging
+- **Defect process:** `defects/README.md` requires GH Issues titled `[Defect] <Requirement ID> - summary`, uses labels, and links screenshots from `defects/screenshots/` for traceability.
+- **Packaging guidance:** `qa/phase-7-8-packaging.md` explains how the Phase 7 deliverables flow through the `deploy-pages` workflow, the artifact layout (`site/index.html`, `site/reports/latest/`, `site/bug-safari/`, `site/release/`), and where to store screenshots.
+- **Evidence assets:** Keep replay screenshots/videos under `defects/screenshots/` and pair them with RTM rows when referencing automated/manual coverage.
+
+## Release, deployment, and artifacts
+- **CI workflow:** `.github/workflows/deploy-pages.yml` checks out code, installs Node.js 20, installs Playwright browsers, builds the app, runs `npm run test:e2e`, uploads the HTML report, assembles the `site/` payload, and triggers GitHub Pages deployment via `actions/deploy-pages@v4`.
+- **Artifact layout:** The workflow places the app into `site/index.html`, copies the latest Playwright output to `site/reports/latest/`, and is expected to publish additional static story pages under `site/bug-safari/` and `site/release/` (see packaging guide).
+- **Playwright report:** The report is uploaded as a GitHub Actions artifact (name: `playwright-report`) so new evidence is always attached to the run.
+- **Local audit evidence:** Audit logs (search + verification events) persist across sessions via `localStorage`, and the staff audit page renders them in a table with filter + reset controls for verification.
+
+## Supporting resources
+- `src/data/records.json`: synthetic data set with Active/Expired/Suspended records plus disciplinary meta.
+- `src/config/maintenance.json`: defaults for maintenance mode + message (`lastUpdated` timestamp included for release notes).
+- `qa/phase-6-story.md` and `qa/final-test-summary.md`: narrative artifacts describing the QA journey and final test outcomes.
+- `playwright-report/`: HTML+media evidence from the last local run (refreshed in CI to `site/reports/latest/`).
+
+## Live experience
+1. Live app: `https://josuejero.github.io/certitrace/`
+2. Latest test report: `https://josuejero.github.io/certitrace/reports/latest/`
+3. Bug safari: `https://josuejero.github.io/certitrace/bug-safari/`
+4. Code repo: `https://github.com/josuejero/certitrace`
+</file>
+
+</files>
